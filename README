@@ -1,0 +1,327 @@
+                            Meshview README
+                       Department of Computer Science
+	                     Indiana University
+                          (c)  1994, 1998, 1999
+
+
+INTRODUCTION
+-------------
+
+This is Meshview, an interactive viewing program for viewing curves
+and two-dimensional manifolds embedded in 3D or 4D. It is written in
+OpenGL and X/Motif. It has been successfully compiled on the SGI under
+IRIX 5.2-6.5, SOLARIS 2.6, and Linux 2.2.2, and should be able to run
+on any workstation that supports OpenGL and X/Motif.
+
+
+FEATURES
+--------
+
+-- Reads Geomview/OOGL (developed at the Geometry Center, University of 
+   Minnesota) MESH, OFF and LIST file formats, plus the additional
+   DOT, LINE, LINE_STRIP, LINE_LOOP, and  FRAMES formats.
+
+-- Rotates/translates/scales objects in 3D and 4D interactively under 
+   mouse control.
+
+-- Applies 3D and 4D rolling ball models to accomplish rotations.
+   (See Technical Reports 319 and 406, Computer Science Department,
+    Indiana University, available by anonymous ftp from
+    ftp.cs.indiana.edu in the directory pub/techreports)
+
+-- Momentum option available on all motions.
+
+-- Optionally draws faces, edges, vertices, normals, palette, 
+   a single lighting vector, a reference unit sphere,
+   and a reference set of 4D axes.
+
+-- Supplies a wide range of color palette options for 4D depth color coding.
+
+-- Supplies an interactive parametric space "picker" (or point locator)
+   for a MESH file or list of MESH files.  Any individual mesh in
+   a set of loaded patches can be selected in turn.
+
+-- Supplies an interactive quaternion rotation utility taking
+   any 3D rotation in the subwindow and converting it to a quaternion
+   multiplication applied to all 4D points in the main window.
+
+-- Saves system state for later recovery, including current 3D and 4D 
+   viewing matrices, camera setting, background color, light direction 
+   and rendered ppm image of the current scene.  This is useful for
+   reconstructing the state of an illustration for a publication.
+
+-- Loads palettes and saved system states.
+
+-- Uses two different colors (or one color) for front-facing and back-facing 
+   surfaces. This feature is quite useful when rotating in 4D.  Also
+   provides several screen-door transparency options and a default
+   checkboard texture map for MESH files.
+
+-- Supports 3D and 4D perspective and orthogonal projections.
+
+-- Supports a choice between applying the 4D rolling ball to the
+   current screen coordinates of the object's 3D projection (context-free,
+   the default), or applying to the object's local 3D coordinate
+   system context (use the "axes" display to help show the context). 
+   The latter is useful for looking at different sides of the object's
+   3D projection while performing a 4D rotation.  This is needed
+   mostly to accommodate a 2D mouse interface, and would not be
+   as useful for a 3D mouse interface.
+
+-- Supports SGI stereographics stereo display with adjustable eye
+   parameters, and an optional Logitech 3D "Flying Mouse" interface.
+
+-- Supports texture mapped MESH objects.
+
+-- Supports keyframe animation with flexible timing and looping controls
+   with the FRAMES format.
+
+-- Includes a selection of example geometry files, including 4D flat torus, 
+   Steiner surface (RP2 embedded in 4D), 4D Fermat surfaces and much more. 
+   (see README file in the data directory for details)
+
+-- Supplies online help.
+
+
+FUTURE FEATURES BEING CONSIDERED
+---------------------------------
+
+-- 3D/4D geodesic generator.
+
+-- 3D/4D manifold walker.
+
+-- Static and dynamically recalculated 4D occlusion markings on 
+   surfaces projected to 3D, like knot crossings of 3D knotted
+   curves projected to 2D.
+
+-- Automatic manifold patch sewing to support complicated ad hoc topologies.
+
+-- Cutting using primitives like plane/sphere/cylinder/... in 3D/4D.
+
+-- Specialized image generator for publications. 
+   Antialiasing, larger-than-buffer size, true transparency, stereo pairs.
+
+-- Support 3-manifolds embedded in 4D/5D/6D, volume rendering of
+   simple tessellations.
+
+-- Animation from files, parametric coordinate transformations, 
+   3D and 4D orientation key frames, topological key frames, etc.
+
+-- Tools for 2 and 3 complex variables.
+
+
+SOME OF OUR DESIGN GOALS
+------------------------
+
+-- Fast. Use display lists in OpenGL. Enhance the Geomview/OOGL MESH 
+   and OFF file formats.  User can specify color per object or
+   color per vertex.
+
+-- Small. Keep as simple and independent as possible.
+
+-- Portable. Use OpenGL and X/Motif.
+
+-- Freely distributable. 
+
+-- Publication hardcopy generator and easily saveable state for later 
+   recovery and refinement of a figure.
+
+======================================================================
+======================================================================
+
+
+INSTALLATION
+------------
+
+Unpack the distribution package by 'zcat Meshview.x.tar.gz | tar xvf -',
+or by 'gunzip Meshview.x.tar.gz' and then 'tar -xvf Meshview.x.tar'.
+It will create a directory 'Meshview'.
+
+Several executable files 'meshview.x' have already been compiled for
+various machines and placed in the bin directory.  If you need to
+recompile for your local configuration, go to the src directory, copy
+the makefile 'Makefile.x' corresponding to your target CPU to
+'Makefile', modify for your local system as necessary, and type 'make'
+to produce the corresponding 'meshview.x' executable in the bin
+directory.  Next, modify 'mw.x', a shell script driver for Meshview,
+to include local paths and dependencies.  To get the iconification
+icon to work, you may need to make a copy of 'meshview.icon' in your
+personal or global '.icons' directory.
+
+
+INVOCATION 
+----------
+
+Type 'mw.x <standard Motif options> <filename> ... <filename>',  where 
+standard Motif options are those like : -geometry 1000x800, etc, 
+and filenames can be names of geometry files, setting files or 
+palette files in any order. Geometry files are loaded sequentially
+and added into an object list. But only the last setting file is used
+if more than one is supplied and only the last palette file is used if 
+more than one is supplied. 
+
+You can of course load files after you start Meshview, 'mw.x' is the 
+simplest way to start.  Control-d is the quick shortcut to immediately
+pop the data-loading dialog.  Note that all menus on the top
+menu bar are "tear-off" style and can be positioned where convenient.
+
+
+MOUSE/KEYBOARD CONTROLS
+-----------------------
+
+Below, (u,v) denotes the right-handed Cartesian coordinates of the mouse.
+-- 3D viewing controls :  
+     leftbutton   : 3D rotation (3D rolling ball)  R3(u,v)
+     middlebutton : 3D translation in x-y plane    T3(u,v,0)
+     rightbutton  : 3D translation along z axis    T3(0,0,-v)
+     Shift+right  : 3D rotation around z axis      R2(u)
+
+-- 3D lighting controls : (you can see the light ray by Ctrl+l)
+     Ctrl+left    : 3D rotation (3D rolling ball)  R3(u,v)
+     Ctrl+middle  : 3D rotation around z axis      R2(u)
+
+-- 4D controls : 
+     Shift+left   : xyw rotation (4D rolling ball)  R4(u,v,0)
+     Shift+middle : xzw rotation (4D rolling ball)  R4(u,0,-v)
+
+-- <Key>r :  (Reset)  It resets 4D and 3D matrices and 3D light direction, 
+	               and it stops momentum.
+-- <Key>c :  (Center) It resets 3D rotation and translation matrices,
+                       and it stops momentum.
+-- <Key>t :  Stops momentum.
+
+-- <Key>F3:  (3D mouse)  Toggles 3D mouse.
+
+-- Keyboard short-cuts for menu items :
+     Ctrl+d     load data
+     Ctrl+a     add data
+     Ctrl+t     load texture
+     Ctrl+l     load palette
+     Ctrl+e     load setting
+     Ctrl+f     save setting
+     Ctrl+i     save as ppm
+     Esc        quit
+
+     <Key>f     toggle drawing of faces (default on)    
+     <Key>e     toggle drawing of edges (default off)
+     <Key>v     toggle drawing of vertices (default off)    
+     <Key>n     toggle drawing of normals (default off)        
+     <Key>u     toggle drawing of unit sphere (default off)        
+*    <Key>i     toggle drawing of 2D complex plane (default off)        
+     <Key>p     toggle drawing of palette (default off)        
+     <Key>l     toggle drawing of lighting (default off)        
+     <Key>a     toggle drawing of axes (default off)        
+
+     <Key>1     draw two sides of face use same color (default)
+     <Key>2     draw two sides of face use different color 
+     <Key>3     4D depth color coding (show the palette with <Key>p)
+     <Key>4     use texture (checkerboard default)
+     
+     <Key>5     screen door off
+     <Key>6     screen door positive
+     <Key>7     screen door negative
+
+     Ctrl+g     smooth shading (default)
+     Ctrl+h     flat shading
+
+     Ctrl+p     3D perspective projection (default)
+     Ctrl+o     3D orthogonal projection
+
+     <Key>w     projecting along w-axis from 4D to 3D (default)
+     <Key>x     projecting along x-axis from 4D to 3D
+	        (rotating the objects in x-w plane by 90 degrees
+                 before apply other 4D rotations)
+     <Key>y     projecting along y-axis from 4D to 3D
+	        (rotating the objects in y-w plane by 90 degrees
+                 before apply other 4D rotations)
+     <Key>z     projecting along z-axis from 4D to 3D
+	        (rotating the objects in z-w plane by 90 degrees
+                 before apply other 4D rotations)
+
+     Shift+o     4D orthogonal projection (default)
+     Shift+p     4D polar projection
+                 (adjust with 'polar distance' scale on 'setting panel')
+
+     Ctrl+m     toggle momentum (default on)
+     Ctrl+q     toggle context-free (default on)
+     Ctrl+s     toggle stereo mode (default off)
+
+     Shift+v    pop up view setting panel
+     Shift+s    pop up setting panel
+     Shift+k    pop up picker panel
+     Shift+q    pop up quaternion rotation panel
+     Shift+f    pop up  key frame panel
+
+
+LEARNING THE ROLLING BALL
+-------------------------
+
+To understand the basic philosophy of the rolling ball interface, 
+start with a 3D object such as square.3mesh.  Use only the left 
+mouse button (3D rolling ball): pulling the mouse in the +x 
+(screen-right) direction tilts the 2D object so that the left edge 
+comes towards the viewer, acquiring positive z-components, and the 
+right edge dips away from the viewer into the screen, acquiring 
+negative values of z. Pushing the mouse in the +y direction 
+(screen-up) tilts the lower edge out into positive z and the upper 
+edge into the screen in the negative z direction.
+  Now load a solid 3D object like sphere.3mesh or torus.3mesh.
+These objects automatically have vanishing 4th components (call it w) 
+at every point when loaded, just as the flat objects had vanishing 
+z-components.  Now use only the SHIFT-LEFT (4D rolling ball) mouse 
+button:  pulling the mouse in the +x (screen-right) direction tilts
+the 3D object in 4D so that the left side is acquiring a positive
+w component and getting squashed in x, while the right side is tilting
+away in w, getting a negative w component.  Turn on 4D depth pseudo-
+coloring to make this dramatically apparent (<Key>3, Ctrl+p) - the left 
+side turns red while the right turns blue with the default colormap.
+Pulling the mouse in the +y direction (screen-up) gives the bottom a 
+positive w and the top a negative w component while squashing the 
+whole object in the y direction. The shift-left mouse control 
+generates x-w and y-w 4D rolling ball rotations.  Now use only the 
+SHIFT-MIDDLE mouse button, which generates x-w and z-w 4D rolling ball 
+rotations.  Moving the mouse in the +x direction has the same effect as 
+shift-left, but pulling the mouse down (screen-down direction) pushes 
+the BACK side of the object out into positive w, and the FRONT side 
+acquires a negative w component. pushing the mouse up (screen-up 
+direction) has the opposite effect.
+  If a 3D mouse is available, all 3 of these motions, or any linear
+combination, are available at once and the splitting into the two
+shift-left and shift-middle controls is not needed.  The default mode,
+in which all 4D rolling ball motions are referred to the screen-based
+xyz coordinate system with z out of the screen, is the most natural
+one to emulate a 3D mouse.  However, when only a 2D mouse is available,
+an alternate mode is provided that can be quite useful:  deactivate the
+"Context_free" check box on the "Motion" menu.  This will allow the user 
+to rotate the object to any 3D orientation (using mouse-left or mouse-
+shift-right), but now shift-left will follow the object's original x-y 
+axes, and rotate the object in 4D as though the 2D mouse were a 3D mouse
+moving in the object's own original x-axis direction, NOT the current 
+screen x.  Analogous behavior occurs for y motions and for shift-middle 
+x and y mouse motions. Turn on the drawing of xyzw axes to see the
+different effects.
+
+
+GEOMETRY FILE FORMATS:  see the file 'README.format'
+---------------------
+
+
+CREDITS
+-------
+
+Meshview 1.0-1.2 was written by Jeff (Hui) Ma and Konstantine Ishkov, and
+designed by Andrew Hanson (hanson@cs.indiana.edu) with Jeff (Hui) Ma and
+Konstantine Ishkov at the Computer Science Department, Indiana
+University at Bloomington.  It is obtainable by anonymous ftp from
+ftp.cs.indiana.edu:/pub/hanson/Meshview.x.tar.gz.
+
+
+Any suggestions, comments, enhancements, and bug reports can be 
+sent to the e-mail address above and will be greatly appreciated.
+
+
+NOTES
+-----
+
+We acknowledge NCSA as the original source of several of the color
+palettes included as examples with Meshview.

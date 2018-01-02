@@ -1,0 +1,44 @@
+#
+# Files
+#
+
+TARGET = meshview
+SRCS = mouse3d.c sgidrvr.c action.c callback.c draw.c geom.c init.c load.c \
+       main.c reset.c save.c transform.c ui.c ui_init.c ui_picker.c \
+       ui_setting.c ui_frames.c stereo.c ui_quatrot.c
+
+#
+# Compilation options
+#
+
+CC 	= cc
+# -o32 -mips2 - will run on all processors >= R4000 (INDY, INDIGO etc.)
+CFLAGS	= -o32 -mips2 -O2 # -g3
+LDFLAGS	= 
+LIBS	= -lGLw -lXm -lXt -lX11 -lXext -lGLU -lGL -lm
+
+RM = /usr/bin/rm -rf
+
+OBJS = ${SRCS:.c=.o}
+
+#
+# Rules
+#
+
+
+default: depend $(TARGET) 
+	cp meshview ../bin/meshview.sgi
+
+$(TARGET): ${OBJS} 
+	    ${CC} ${CFLAGS} ${LDFLAGS} -o $@ ${OBJS} ${LIBS}
+
+clean: clobber
+	-$(RM) $(OBJS) $(TARGET)
+
+clobber:
+	-$(RM) *~  *.bak #*
+
+depend:
+	makedepend -f Makefile $(SRCS)
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.

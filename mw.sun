@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# MeshView shell script driver
+
+# To install the iconification icon "meshview.icon", copy to ~/.icons
+
+# modify the following line to your own setting. 
+MESHROOT=/nfs/italy/proj/viz/Meshview
+
+
+# don't change anything below this line
+
+# tell MeshView where to find executable file, geometry data files, 
+# palettes and setting files
+: ${MESHVIEW=${MESHROOT}/bin/meshview.sun}
+: ${MESHVIEW_DATA=${MESHROOT}/data}
+: ${MESHVIEW_PALETTE=${MESHROOT}/palette}
+: ${MESHVIEW_TEXTURE=${MESHROOT}/texture}
+: ${MESHVIEW_SETTING=${MESHROOT}/setting}
+
+export MESHROOT MESHVIEW MESHVIEW_DATA MESHVIEW_PALETTE MESHVIEW_SETTING \
+    MESHVIEW_TEXTURE
+
+case "$1" in
+  *) exec $MESHVIEW ${1+"$@"} ;;
+esac

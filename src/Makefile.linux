@@ -1,0 +1,1345 @@
+#
+# Files
+#
+#  Try GenToo compilation
+# First: remove depends stuff inserted by RedHat and retry
+#
+# /usr/include/GL/GLwDrawA.h GLwMDrawA.h
+# and libraries seem to be in /usr/X11R6/lib/
+
+TARGET = meshview
+
+# omit ? mouse3d.c sgidrvr.c
+SRCS =  mouse3d.c sgidrvr.c \
+        action.c callback.c draw.c geom.c init.c load.c \
+       main.c reset.c save.c transform.c ui.c ui_init.c ui_picker.c \
+       ui_setting.c ui_frames.c stereo.c ui_quatrot.c
+
+#
+# Compilation options
+#
+
+CC 	= gcc
+# -o32 -mips2 - will run on all processors >= R4000 (INDY, INDIGO etc.)
+#  GenToo? -I/usr/include/linux/
+CFLAGS	=  -O2 -DNO_STEREO -DLINUX -I/usr/X11R6/include 
+LDFLAGS	= -L/usr/X11R6/lib/ 
+
+LIBS	= -lGLw  -lXm -lXt -lX11 -lXext -lGLU -lGL -lm
+
+RM = /usr/bin/rm -rf
+
+OBJS = ${SRCS:.c=.o}
+
+#
+# Rules
+#
+
+
+default: depend $(TARGET) 
+	cp meshview ../bin/meshview.linux
+
+$(TARGET): ${OBJS} 
+	    ${CC} ${CFLAGS} ${LDFLAGS} -o $@ ${OBJS} ${LIBS}
+
+clean: clobber
+	-$(RM) $(OBJS) $(TARGET)
+
+clobber:
+	-$(RM) *~  *.bak #*
+
+depend:
+	makedepend -f Makefile.linux $(SRCS)
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+mouse3d.o: all.h /usr/include/stdio.h /usr/include/features.h
+mouse3d.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+mouse3d.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stddef.h
+mouse3d.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+mouse3d.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+mouse3d.o: /usr/include/_G_config.h /usr/include/wchar.h
+mouse3d.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+mouse3d.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stdarg.h
+mouse3d.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+mouse3d.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+mouse3d.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+mouse3d.o: /usr/include/sys/errno.h /usr/include/errno.h
+mouse3d.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+mouse3d.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+mouse3d.o: /usr/include/bits/fcntl.h /usr/include/math.h
+mouse3d.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+mouse3d.o: /usr/include/bits/mathcalls.h /usr/include/Xm/XmAll.h
+mouse3d.o: /usr/include/Xm/Xm.h /usr/include/X11/Intrinsic.h
+mouse3d.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+mouse3d.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+mouse3d.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+mouse3d.o: /usr/include/string.h /usr/include/X11/Core.h
+mouse3d.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+mouse3d.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+mouse3d.o: /usr/include/X11/Shell.h /usr/include/X11/SM/SMlib.h
+mouse3d.o: /usr/include/X11/SM/SM.h /usr/include/X11/ICE/ICElib.h
+mouse3d.o: /usr/include/X11/ICE/ICE.h /usr/include/X11/Xatom.h
+mouse3d.o: /usr/include/X11/extensions/Print.h /usr/include/X11/Xauth.h
+mouse3d.o: /usr/include/X11/Xfuncs.h /usr/include/Xm/XmStrDefs.h
+mouse3d.o: /usr/include/X11/StringDefs.h /usr/include/Xm/XmStrDefs22.h
+mouse3d.o: /usr/include/Xm/VirtKeys.h /usr/include/Xm/Transfer.h
+mouse3d.o: /usr/include/Xm/DragC.h /usr/include/Xm/Display.h
+mouse3d.o: /usr/include/Xm/DropSMgr.h /usr/include/Xm/Primitive.h
+mouse3d.o: /usr/include/Xm/Manager.h /usr/include/Xm/Gadget.h
+mouse3d.o: /usr/include/Xm/TxtPropCv.h /usr/include/Xm/VendorS.h
+mouse3d.o: /usr/include/Xm/XmIm.h /usr/include/Xm/ArrowB.h
+mouse3d.o: /usr/include/Xm/ArrowBG.h /usr/include/Xm/AtomMgr.h
+mouse3d.o: /usr/include/Xm/BulletinB.h /usr/include/Xm/CascadeB.h
+mouse3d.o: /usr/include/Xm/CascadeBG.h /usr/include/Xm/ComboBox.h
+mouse3d.o: /usr/include/Xm/Command.h /usr/include/Xm/Container.h
+mouse3d.o: /usr/include/Xm/CutPaste.h /usr/include/Xm/DialogS.h
+mouse3d.o: /usr/include/Xm/DragDrop.h /usr/include/Xm/DragIcon.h
+mouse3d.o: /usr/include/Xm/DropTrans.h /usr/include/Xm/DragOverS.h
+mouse3d.o: /usr/include/Xm/DrawingA.h /usr/include/Xm/DrawnB.h
+mouse3d.o: /usr/include/Xm/FileSB.h /usr/include/Xm/Form.h
+mouse3d.o: /usr/include/Xm/Frame.h /usr/include/Xm/GrabShell.h
+mouse3d.o: /usr/include/Xm/IconFile.h /usr/include/Xm/IconG.h
+mouse3d.o: /usr/include/Xm/IconH.h /usr/include/Xm/Label.h
+mouse3d.o: /usr/include/Xm/LabelG.h /usr/include/Xm/List.h
+mouse3d.o: /usr/include/Xm/MainW.h /usr/include/Xm/MenuShell.h
+mouse3d.o: /usr/include/Xm/MessageB.h /usr/include/Xm/MwmUtil.h
+mouse3d.o: /usr/include/X11/Xmd.h /usr/include/Xm/Notebook.h
+mouse3d.o: /usr/include/Xm/PanedW.h /usr/include/Xm/Print.h
+mouse3d.o: /usr/include/Xm/Protocols.h /usr/include/Xm/PushB.h
+mouse3d.o: /usr/include/Xm/PushBG.h /usr/include/Xm/RepType.h
+mouse3d.o: /usr/include/Xm/RowColumn.h /usr/include/Xm/SSpinB.h
+mouse3d.o: /usr/include/Xm/Scale.h /usr/include/Xm/Screen.h
+mouse3d.o: /usr/include/Xm/ScrollBar.h /usr/include/Xm/ScrolledW.h
+mouse3d.o: /usr/include/Xm/SelectioB.h /usr/include/Xm/SeparatoG.h
+mouse3d.o: /usr/include/Xm/Separator.h /usr/include/Xm/SpinB.h
+mouse3d.o: /usr/include/Xm/Text.h /usr/include/Xm/TextF.h
+mouse3d.o: /usr/include/Xm/ToggleB.h /usr/include/Xm/ToggleBG.h
+mouse3d.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+mouse3d.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+mouse3d.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+mouse3d.o: /usr/include/sys/time.h /usr/include/bits/time.h
+mouse3d.o: /usr/include/sys/select.h /usr/include/bits/select.h
+mouse3d.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+mouse3d.o: /usr/include/GL/gl.h /usr/include/GL/glext.h /usr/include/GL/glu.h
+mouse3d.o: /usr/include/GL/glx.h /usr/include/GL/glxtokens.h defines.h
+mouse3d.o: structs.h sgidrvr.h
+sgidrvr.o: /usr/include/stdio.h /usr/include/features.h
+sgidrvr.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+sgidrvr.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stddef.h
+sgidrvr.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+sgidrvr.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+sgidrvr.o: /usr/include/_G_config.h /usr/include/wchar.h
+sgidrvr.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+sgidrvr.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stdarg.h
+sgidrvr.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+sgidrvr.o: /usr/include/sys/types.h /usr/include/time.h
+sgidrvr.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+sgidrvr.o: /usr/include/fcntl.h /usr/include/bits/fcntl.h
+sgidrvr.o: /usr/include/termios.h /usr/include/bits/termios.h
+sgidrvr.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
+sgidrvr.o: /usr/include/bits/confname.h sgidrvr.h
+action.o: all.h /usr/include/stdio.h /usr/include/features.h
+action.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+action.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stddef.h
+action.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+action.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+action.o: /usr/include/_G_config.h /usr/include/wchar.h
+action.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+action.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stdarg.h
+action.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+action.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+action.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+action.o: /usr/include/sys/errno.h /usr/include/errno.h
+action.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+action.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+action.o: /usr/include/bits/fcntl.h /usr/include/math.h
+action.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+action.o: /usr/include/bits/mathcalls.h /usr/include/Xm/XmAll.h
+action.o: /usr/include/Xm/Xm.h /usr/include/X11/Intrinsic.h
+action.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+action.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+action.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+action.o: /usr/include/string.h /usr/include/X11/Core.h
+action.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+action.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+action.o: /usr/include/X11/Shell.h /usr/include/X11/SM/SMlib.h
+action.o: /usr/include/X11/SM/SM.h /usr/include/X11/ICE/ICElib.h
+action.o: /usr/include/X11/ICE/ICE.h /usr/include/X11/Xatom.h
+action.o: /usr/include/X11/extensions/Print.h /usr/include/X11/Xauth.h
+action.o: /usr/include/X11/Xfuncs.h /usr/include/Xm/XmStrDefs.h
+action.o: /usr/include/X11/StringDefs.h /usr/include/Xm/XmStrDefs22.h
+action.o: /usr/include/Xm/VirtKeys.h /usr/include/Xm/Transfer.h
+action.o: /usr/include/Xm/DragC.h /usr/include/Xm/Display.h
+action.o: /usr/include/Xm/DropSMgr.h /usr/include/Xm/Primitive.h
+action.o: /usr/include/Xm/Manager.h /usr/include/Xm/Gadget.h
+action.o: /usr/include/Xm/TxtPropCv.h /usr/include/Xm/VendorS.h
+action.o: /usr/include/Xm/XmIm.h /usr/include/Xm/ArrowB.h
+action.o: /usr/include/Xm/ArrowBG.h /usr/include/Xm/AtomMgr.h
+action.o: /usr/include/Xm/BulletinB.h /usr/include/Xm/CascadeB.h
+action.o: /usr/include/Xm/CascadeBG.h /usr/include/Xm/ComboBox.h
+action.o: /usr/include/Xm/Command.h /usr/include/Xm/Container.h
+action.o: /usr/include/Xm/CutPaste.h /usr/include/Xm/DialogS.h
+action.o: /usr/include/Xm/DragDrop.h /usr/include/Xm/DragIcon.h
+action.o: /usr/include/Xm/DropTrans.h /usr/include/Xm/DragOverS.h
+action.o: /usr/include/Xm/DrawingA.h /usr/include/Xm/DrawnB.h
+action.o: /usr/include/Xm/FileSB.h /usr/include/Xm/Form.h
+action.o: /usr/include/Xm/Frame.h /usr/include/Xm/GrabShell.h
+action.o: /usr/include/Xm/IconFile.h /usr/include/Xm/IconG.h
+action.o: /usr/include/Xm/IconH.h /usr/include/Xm/Label.h
+action.o: /usr/include/Xm/LabelG.h /usr/include/Xm/List.h
+action.o: /usr/include/Xm/MainW.h /usr/include/Xm/MenuShell.h
+action.o: /usr/include/Xm/MessageB.h /usr/include/Xm/MwmUtil.h
+action.o: /usr/include/X11/Xmd.h /usr/include/Xm/Notebook.h
+action.o: /usr/include/Xm/PanedW.h /usr/include/Xm/Print.h
+action.o: /usr/include/Xm/Protocols.h /usr/include/Xm/PushB.h
+action.o: /usr/include/Xm/PushBG.h /usr/include/Xm/RepType.h
+action.o: /usr/include/Xm/RowColumn.h /usr/include/Xm/SSpinB.h
+action.o: /usr/include/Xm/Scale.h /usr/include/Xm/Screen.h
+action.o: /usr/include/Xm/ScrollBar.h /usr/include/Xm/ScrolledW.h
+action.o: /usr/include/Xm/SelectioB.h /usr/include/Xm/SeparatoG.h
+action.o: /usr/include/Xm/Separator.h /usr/include/Xm/SpinB.h
+action.o: /usr/include/Xm/Text.h /usr/include/Xm/TextF.h
+action.o: /usr/include/Xm/ToggleB.h /usr/include/Xm/ToggleBG.h
+action.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+action.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+action.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+action.o: /usr/include/sys/time.h /usr/include/bits/time.h
+action.o: /usr/include/sys/select.h /usr/include/bits/select.h
+action.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+action.o: /usr/include/GL/gl.h /usr/include/GL/glext.h /usr/include/GL/glu.h
+action.o: /usr/include/GL/glx.h /usr/include/GL/glxtokens.h defines.h
+action.o: structs.h
+callback.o: all.h /usr/include/stdio.h /usr/include/features.h
+callback.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+callback.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stddef.h
+callback.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+callback.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+callback.o: /usr/include/_G_config.h /usr/include/wchar.h
+callback.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+callback.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stdarg.h
+callback.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+callback.o: /usr/include/stdlib.h /usr/include/sys/types.h
+callback.o: /usr/include/time.h /usr/include/sys/stat.h
+callback.o: /usr/include/bits/stat.h /usr/include/sys/errno.h
+callback.o: /usr/include/errno.h /usr/include/bits/errno.h
+callback.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+callback.o: /usr/include/fcntl.h /usr/include/bits/fcntl.h
+callback.o: /usr/include/math.h /usr/include/bits/huge_val.h
+callback.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+callback.o: /usr/include/Xm/XmAll.h /usr/include/Xm/Xm.h
+callback.o: /usr/include/X11/Intrinsic.h /usr/include/X11/Xlib.h
+callback.o: /usr/include/X11/X.h /usr/include/X11/Xfuncproto.h
+callback.o: /usr/include/X11/Xosdefs.h /usr/include/X11/Xutil.h
+callback.o: /usr/include/X11/Xresource.h /usr/include/string.h
+callback.o: /usr/include/X11/Core.h /usr/include/X11/Composite.h
+callback.o: /usr/include/X11/Constraint.h /usr/include/X11/Object.h
+callback.o: /usr/include/X11/RectObj.h /usr/include/X11/Shell.h
+callback.o: /usr/include/X11/SM/SMlib.h /usr/include/X11/SM/SM.h
+callback.o: /usr/include/X11/ICE/ICElib.h /usr/include/X11/ICE/ICE.h
+callback.o: /usr/include/X11/Xatom.h /usr/include/X11/extensions/Print.h
+callback.o: /usr/include/X11/Xauth.h /usr/include/X11/Xfuncs.h
+callback.o: /usr/include/Xm/XmStrDefs.h /usr/include/X11/StringDefs.h
+callback.o: /usr/include/Xm/XmStrDefs22.h /usr/include/Xm/VirtKeys.h
+callback.o: /usr/include/Xm/Transfer.h /usr/include/Xm/DragC.h
+callback.o: /usr/include/Xm/Display.h /usr/include/Xm/DropSMgr.h
+callback.o: /usr/include/Xm/Primitive.h /usr/include/Xm/Manager.h
+callback.o: /usr/include/Xm/Gadget.h /usr/include/Xm/TxtPropCv.h
+callback.o: /usr/include/Xm/VendorS.h /usr/include/Xm/XmIm.h
+callback.o: /usr/include/Xm/ArrowB.h /usr/include/Xm/ArrowBG.h
+callback.o: /usr/include/Xm/AtomMgr.h /usr/include/Xm/BulletinB.h
+callback.o: /usr/include/Xm/CascadeB.h /usr/include/Xm/CascadeBG.h
+callback.o: /usr/include/Xm/ComboBox.h /usr/include/Xm/Command.h
+callback.o: /usr/include/Xm/Container.h /usr/include/Xm/CutPaste.h
+callback.o: /usr/include/Xm/DialogS.h /usr/include/Xm/DragDrop.h
+callback.o: /usr/include/Xm/DragIcon.h /usr/include/Xm/DropTrans.h
+callback.o: /usr/include/Xm/DragOverS.h /usr/include/Xm/DrawingA.h
+callback.o: /usr/include/Xm/DrawnB.h /usr/include/Xm/FileSB.h
+callback.o: /usr/include/Xm/Form.h /usr/include/Xm/Frame.h
+callback.o: /usr/include/Xm/GrabShell.h /usr/include/Xm/IconFile.h
+callback.o: /usr/include/Xm/IconG.h /usr/include/Xm/IconH.h
+callback.o: /usr/include/Xm/Label.h /usr/include/Xm/LabelG.h
+callback.o: /usr/include/Xm/List.h /usr/include/Xm/MainW.h
+callback.o: /usr/include/Xm/MenuShell.h /usr/include/Xm/MessageB.h
+callback.o: /usr/include/Xm/MwmUtil.h /usr/include/X11/Xmd.h
+callback.o: /usr/include/Xm/Notebook.h /usr/include/Xm/PanedW.h
+callback.o: /usr/include/Xm/Print.h /usr/include/Xm/Protocols.h
+callback.o: /usr/include/Xm/PushB.h /usr/include/Xm/PushBG.h
+callback.o: /usr/include/Xm/RepType.h /usr/include/Xm/RowColumn.h
+callback.o: /usr/include/Xm/SSpinB.h /usr/include/Xm/Scale.h
+callback.o: /usr/include/Xm/Screen.h /usr/include/Xm/ScrollBar.h
+callback.o: /usr/include/Xm/ScrolledW.h /usr/include/Xm/SelectioB.h
+callback.o: /usr/include/Xm/SeparatoG.h /usr/include/Xm/Separator.h
+callback.o: /usr/include/Xm/SpinB.h /usr/include/Xm/Text.h
+callback.o: /usr/include/Xm/TextF.h /usr/include/Xm/ToggleB.h
+callback.o: /usr/include/Xm/ToggleBG.h /usr/include/X11/keysym.h
+callback.o: /usr/include/X11/keysymdef.h /usr/include/X11/Xos.h
+callback.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
+callback.o: /usr/include/bits/confname.h /usr/include/sys/time.h
+callback.o: /usr/include/bits/time.h /usr/include/sys/select.h
+callback.o: /usr/include/bits/select.h /usr/include/bits/sigset.h
+callback.o: /usr/include/X11/Xarch.h /usr/include/GL/gl.h
+callback.o: /usr/include/GL/glext.h /usr/include/GL/glu.h
+callback.o: /usr/include/GL/glx.h /usr/include/GL/glxtokens.h defines.h
+callback.o: structs.h
+draw.o: all.h /usr/include/stdio.h /usr/include/features.h
+draw.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+draw.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stddef.h
+draw.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+draw.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+draw.o: /usr/include/_G_config.h /usr/include/wchar.h
+draw.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+draw.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stdarg.h
+draw.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+draw.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+draw.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+draw.o: /usr/include/sys/errno.h /usr/include/errno.h
+draw.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+draw.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+draw.o: /usr/include/bits/fcntl.h /usr/include/math.h
+draw.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+draw.o: /usr/include/bits/mathcalls.h /usr/include/Xm/XmAll.h
+draw.o: /usr/include/Xm/Xm.h /usr/include/X11/Intrinsic.h
+draw.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+draw.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+draw.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+draw.o: /usr/include/string.h /usr/include/X11/Core.h
+draw.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+draw.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+draw.o: /usr/include/X11/Shell.h /usr/include/X11/SM/SMlib.h
+draw.o: /usr/include/X11/SM/SM.h /usr/include/X11/ICE/ICElib.h
+draw.o: /usr/include/X11/ICE/ICE.h /usr/include/X11/Xatom.h
+draw.o: /usr/include/X11/extensions/Print.h /usr/include/X11/Xauth.h
+draw.o: /usr/include/X11/Xfuncs.h /usr/include/Xm/XmStrDefs.h
+draw.o: /usr/include/X11/StringDefs.h /usr/include/Xm/XmStrDefs22.h
+draw.o: /usr/include/Xm/VirtKeys.h /usr/include/Xm/Transfer.h
+draw.o: /usr/include/Xm/DragC.h /usr/include/Xm/Display.h
+draw.o: /usr/include/Xm/DropSMgr.h /usr/include/Xm/Primitive.h
+draw.o: /usr/include/Xm/Manager.h /usr/include/Xm/Gadget.h
+draw.o: /usr/include/Xm/TxtPropCv.h /usr/include/Xm/VendorS.h
+draw.o: /usr/include/Xm/XmIm.h /usr/include/Xm/ArrowB.h
+draw.o: /usr/include/Xm/ArrowBG.h /usr/include/Xm/AtomMgr.h
+draw.o: /usr/include/Xm/BulletinB.h /usr/include/Xm/CascadeB.h
+draw.o: /usr/include/Xm/CascadeBG.h /usr/include/Xm/ComboBox.h
+draw.o: /usr/include/Xm/Command.h /usr/include/Xm/Container.h
+draw.o: /usr/include/Xm/CutPaste.h /usr/include/Xm/DialogS.h
+draw.o: /usr/include/Xm/DragDrop.h /usr/include/Xm/DragIcon.h
+draw.o: /usr/include/Xm/DropTrans.h /usr/include/Xm/DragOverS.h
+draw.o: /usr/include/Xm/DrawingA.h /usr/include/Xm/DrawnB.h
+draw.o: /usr/include/Xm/FileSB.h /usr/include/Xm/Form.h
+draw.o: /usr/include/Xm/Frame.h /usr/include/Xm/GrabShell.h
+draw.o: /usr/include/Xm/IconFile.h /usr/include/Xm/IconG.h
+draw.o: /usr/include/Xm/IconH.h /usr/include/Xm/Label.h
+draw.o: /usr/include/Xm/LabelG.h /usr/include/Xm/List.h
+draw.o: /usr/include/Xm/MainW.h /usr/include/Xm/MenuShell.h
+draw.o: /usr/include/Xm/MessageB.h /usr/include/Xm/MwmUtil.h
+draw.o: /usr/include/X11/Xmd.h /usr/include/Xm/Notebook.h
+draw.o: /usr/include/Xm/PanedW.h /usr/include/Xm/Print.h
+draw.o: /usr/include/Xm/Protocols.h /usr/include/Xm/PushB.h
+draw.o: /usr/include/Xm/PushBG.h /usr/include/Xm/RepType.h
+draw.o: /usr/include/Xm/RowColumn.h /usr/include/Xm/SSpinB.h
+draw.o: /usr/include/Xm/Scale.h /usr/include/Xm/Screen.h
+draw.o: /usr/include/Xm/ScrollBar.h /usr/include/Xm/ScrolledW.h
+draw.o: /usr/include/Xm/SelectioB.h /usr/include/Xm/SeparatoG.h
+draw.o: /usr/include/Xm/Separator.h /usr/include/Xm/SpinB.h
+draw.o: /usr/include/Xm/Text.h /usr/include/Xm/TextF.h
+draw.o: /usr/include/Xm/ToggleB.h /usr/include/Xm/ToggleBG.h
+draw.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+draw.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+draw.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+draw.o: /usr/include/sys/time.h /usr/include/bits/time.h
+draw.o: /usr/include/sys/select.h /usr/include/bits/select.h
+draw.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+draw.o: /usr/include/GL/gl.h /usr/include/GL/glext.h /usr/include/GL/glu.h
+draw.o: /usr/include/GL/glx.h /usr/include/GL/glxtokens.h defines.h structs.h
+geom.o: all.h /usr/include/stdio.h /usr/include/features.h
+geom.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+geom.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stddef.h
+geom.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+geom.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+geom.o: /usr/include/_G_config.h /usr/include/wchar.h
+geom.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+geom.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stdarg.h
+geom.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+geom.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+geom.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+geom.o: /usr/include/sys/errno.h /usr/include/errno.h
+geom.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+geom.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+geom.o: /usr/include/bits/fcntl.h /usr/include/math.h
+geom.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+geom.o: /usr/include/bits/mathcalls.h /usr/include/Xm/XmAll.h
+geom.o: /usr/include/Xm/Xm.h /usr/include/X11/Intrinsic.h
+geom.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+geom.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+geom.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+geom.o: /usr/include/string.h /usr/include/X11/Core.h
+geom.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+geom.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+geom.o: /usr/include/X11/Shell.h /usr/include/X11/SM/SMlib.h
+geom.o: /usr/include/X11/SM/SM.h /usr/include/X11/ICE/ICElib.h
+geom.o: /usr/include/X11/ICE/ICE.h /usr/include/X11/Xatom.h
+geom.o: /usr/include/X11/extensions/Print.h /usr/include/X11/Xauth.h
+geom.o: /usr/include/X11/Xfuncs.h /usr/include/Xm/XmStrDefs.h
+geom.o: /usr/include/X11/StringDefs.h /usr/include/Xm/XmStrDefs22.h
+geom.o: /usr/include/Xm/VirtKeys.h /usr/include/Xm/Transfer.h
+geom.o: /usr/include/Xm/DragC.h /usr/include/Xm/Display.h
+geom.o: /usr/include/Xm/DropSMgr.h /usr/include/Xm/Primitive.h
+geom.o: /usr/include/Xm/Manager.h /usr/include/Xm/Gadget.h
+geom.o: /usr/include/Xm/TxtPropCv.h /usr/include/Xm/VendorS.h
+geom.o: /usr/include/Xm/XmIm.h /usr/include/Xm/ArrowB.h
+geom.o: /usr/include/Xm/ArrowBG.h /usr/include/Xm/AtomMgr.h
+geom.o: /usr/include/Xm/BulletinB.h /usr/include/Xm/CascadeB.h
+geom.o: /usr/include/Xm/CascadeBG.h /usr/include/Xm/ComboBox.h
+geom.o: /usr/include/Xm/Command.h /usr/include/Xm/Container.h
+geom.o: /usr/include/Xm/CutPaste.h /usr/include/Xm/DialogS.h
+geom.o: /usr/include/Xm/DragDrop.h /usr/include/Xm/DragIcon.h
+geom.o: /usr/include/Xm/DropTrans.h /usr/include/Xm/DragOverS.h
+geom.o: /usr/include/Xm/DrawingA.h /usr/include/Xm/DrawnB.h
+geom.o: /usr/include/Xm/FileSB.h /usr/include/Xm/Form.h
+geom.o: /usr/include/Xm/Frame.h /usr/include/Xm/GrabShell.h
+geom.o: /usr/include/Xm/IconFile.h /usr/include/Xm/IconG.h
+geom.o: /usr/include/Xm/IconH.h /usr/include/Xm/Label.h
+geom.o: /usr/include/Xm/LabelG.h /usr/include/Xm/List.h
+geom.o: /usr/include/Xm/MainW.h /usr/include/Xm/MenuShell.h
+geom.o: /usr/include/Xm/MessageB.h /usr/include/Xm/MwmUtil.h
+geom.o: /usr/include/X11/Xmd.h /usr/include/Xm/Notebook.h
+geom.o: /usr/include/Xm/PanedW.h /usr/include/Xm/Print.h
+geom.o: /usr/include/Xm/Protocols.h /usr/include/Xm/PushB.h
+geom.o: /usr/include/Xm/PushBG.h /usr/include/Xm/RepType.h
+geom.o: /usr/include/Xm/RowColumn.h /usr/include/Xm/SSpinB.h
+geom.o: /usr/include/Xm/Scale.h /usr/include/Xm/Screen.h
+geom.o: /usr/include/Xm/ScrollBar.h /usr/include/Xm/ScrolledW.h
+geom.o: /usr/include/Xm/SelectioB.h /usr/include/Xm/SeparatoG.h
+geom.o: /usr/include/Xm/Separator.h /usr/include/Xm/SpinB.h
+geom.o: /usr/include/Xm/Text.h /usr/include/Xm/TextF.h
+geom.o: /usr/include/Xm/ToggleB.h /usr/include/Xm/ToggleBG.h
+geom.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+geom.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+geom.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+geom.o: /usr/include/sys/time.h /usr/include/bits/time.h
+geom.o: /usr/include/sys/select.h /usr/include/bits/select.h
+geom.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+geom.o: /usr/include/GL/gl.h /usr/include/GL/glext.h /usr/include/GL/glu.h
+geom.o: /usr/include/GL/glx.h /usr/include/GL/glxtokens.h defines.h structs.h
+init.o: all.h /usr/include/stdio.h /usr/include/features.h
+init.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+init.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stddef.h
+init.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+init.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+init.o: /usr/include/_G_config.h /usr/include/wchar.h
+init.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+init.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stdarg.h
+init.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+init.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+init.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+init.o: /usr/include/sys/errno.h /usr/include/errno.h
+init.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+init.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+init.o: /usr/include/bits/fcntl.h /usr/include/math.h
+init.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+init.o: /usr/include/bits/mathcalls.h /usr/include/Xm/XmAll.h
+init.o: /usr/include/Xm/Xm.h /usr/include/X11/Intrinsic.h
+init.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+init.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+init.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+init.o: /usr/include/string.h /usr/include/X11/Core.h
+init.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+init.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+init.o: /usr/include/X11/Shell.h /usr/include/X11/SM/SMlib.h
+init.o: /usr/include/X11/SM/SM.h /usr/include/X11/ICE/ICElib.h
+init.o: /usr/include/X11/ICE/ICE.h /usr/include/X11/Xatom.h
+init.o: /usr/include/X11/extensions/Print.h /usr/include/X11/Xauth.h
+init.o: /usr/include/X11/Xfuncs.h /usr/include/Xm/XmStrDefs.h
+init.o: /usr/include/X11/StringDefs.h /usr/include/Xm/XmStrDefs22.h
+init.o: /usr/include/Xm/VirtKeys.h /usr/include/Xm/Transfer.h
+init.o: /usr/include/Xm/DragC.h /usr/include/Xm/Display.h
+init.o: /usr/include/Xm/DropSMgr.h /usr/include/Xm/Primitive.h
+init.o: /usr/include/Xm/Manager.h /usr/include/Xm/Gadget.h
+init.o: /usr/include/Xm/TxtPropCv.h /usr/include/Xm/VendorS.h
+init.o: /usr/include/Xm/XmIm.h /usr/include/Xm/ArrowB.h
+init.o: /usr/include/Xm/ArrowBG.h /usr/include/Xm/AtomMgr.h
+init.o: /usr/include/Xm/BulletinB.h /usr/include/Xm/CascadeB.h
+init.o: /usr/include/Xm/CascadeBG.h /usr/include/Xm/ComboBox.h
+init.o: /usr/include/Xm/Command.h /usr/include/Xm/Container.h
+init.o: /usr/include/Xm/CutPaste.h /usr/include/Xm/DialogS.h
+init.o: /usr/include/Xm/DragDrop.h /usr/include/Xm/DragIcon.h
+init.o: /usr/include/Xm/DropTrans.h /usr/include/Xm/DragOverS.h
+init.o: /usr/include/Xm/DrawingA.h /usr/include/Xm/DrawnB.h
+init.o: /usr/include/Xm/FileSB.h /usr/include/Xm/Form.h
+init.o: /usr/include/Xm/Frame.h /usr/include/Xm/GrabShell.h
+init.o: /usr/include/Xm/IconFile.h /usr/include/Xm/IconG.h
+init.o: /usr/include/Xm/IconH.h /usr/include/Xm/Label.h
+init.o: /usr/include/Xm/LabelG.h /usr/include/Xm/List.h
+init.o: /usr/include/Xm/MainW.h /usr/include/Xm/MenuShell.h
+init.o: /usr/include/Xm/MessageB.h /usr/include/Xm/MwmUtil.h
+init.o: /usr/include/X11/Xmd.h /usr/include/Xm/Notebook.h
+init.o: /usr/include/Xm/PanedW.h /usr/include/Xm/Print.h
+init.o: /usr/include/Xm/Protocols.h /usr/include/Xm/PushB.h
+init.o: /usr/include/Xm/PushBG.h /usr/include/Xm/RepType.h
+init.o: /usr/include/Xm/RowColumn.h /usr/include/Xm/SSpinB.h
+init.o: /usr/include/Xm/Scale.h /usr/include/Xm/Screen.h
+init.o: /usr/include/Xm/ScrollBar.h /usr/include/Xm/ScrolledW.h
+init.o: /usr/include/Xm/SelectioB.h /usr/include/Xm/SeparatoG.h
+init.o: /usr/include/Xm/Separator.h /usr/include/Xm/SpinB.h
+init.o: /usr/include/Xm/Text.h /usr/include/Xm/TextF.h
+init.o: /usr/include/Xm/ToggleB.h /usr/include/Xm/ToggleBG.h
+init.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+init.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+init.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+init.o: /usr/include/sys/time.h /usr/include/bits/time.h
+init.o: /usr/include/sys/select.h /usr/include/bits/select.h
+init.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+init.o: /usr/include/GL/gl.h /usr/include/GL/glext.h /usr/include/GL/glu.h
+init.o: /usr/include/GL/glx.h /usr/include/GL/glxtokens.h defines.h structs.h
+load.o: all.h /usr/include/stdio.h /usr/include/features.h
+load.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+load.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stddef.h
+load.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+load.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+load.o: /usr/include/_G_config.h /usr/include/wchar.h
+load.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+load.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stdarg.h
+load.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+load.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+load.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+load.o: /usr/include/sys/errno.h /usr/include/errno.h
+load.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+load.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+load.o: /usr/include/bits/fcntl.h /usr/include/math.h
+load.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+load.o: /usr/include/bits/mathcalls.h /usr/include/Xm/XmAll.h
+load.o: /usr/include/Xm/Xm.h /usr/include/X11/Intrinsic.h
+load.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+load.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+load.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+load.o: /usr/include/string.h /usr/include/X11/Core.h
+load.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+load.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+load.o: /usr/include/X11/Shell.h /usr/include/X11/SM/SMlib.h
+load.o: /usr/include/X11/SM/SM.h /usr/include/X11/ICE/ICElib.h
+load.o: /usr/include/X11/ICE/ICE.h /usr/include/X11/Xatom.h
+load.o: /usr/include/X11/extensions/Print.h /usr/include/X11/Xauth.h
+load.o: /usr/include/X11/Xfuncs.h /usr/include/Xm/XmStrDefs.h
+load.o: /usr/include/X11/StringDefs.h /usr/include/Xm/XmStrDefs22.h
+load.o: /usr/include/Xm/VirtKeys.h /usr/include/Xm/Transfer.h
+load.o: /usr/include/Xm/DragC.h /usr/include/Xm/Display.h
+load.o: /usr/include/Xm/DropSMgr.h /usr/include/Xm/Primitive.h
+load.o: /usr/include/Xm/Manager.h /usr/include/Xm/Gadget.h
+load.o: /usr/include/Xm/TxtPropCv.h /usr/include/Xm/VendorS.h
+load.o: /usr/include/Xm/XmIm.h /usr/include/Xm/ArrowB.h
+load.o: /usr/include/Xm/ArrowBG.h /usr/include/Xm/AtomMgr.h
+load.o: /usr/include/Xm/BulletinB.h /usr/include/Xm/CascadeB.h
+load.o: /usr/include/Xm/CascadeBG.h /usr/include/Xm/ComboBox.h
+load.o: /usr/include/Xm/Command.h /usr/include/Xm/Container.h
+load.o: /usr/include/Xm/CutPaste.h /usr/include/Xm/DialogS.h
+load.o: /usr/include/Xm/DragDrop.h /usr/include/Xm/DragIcon.h
+load.o: /usr/include/Xm/DropTrans.h /usr/include/Xm/DragOverS.h
+load.o: /usr/include/Xm/DrawingA.h /usr/include/Xm/DrawnB.h
+load.o: /usr/include/Xm/FileSB.h /usr/include/Xm/Form.h
+load.o: /usr/include/Xm/Frame.h /usr/include/Xm/GrabShell.h
+load.o: /usr/include/Xm/IconFile.h /usr/include/Xm/IconG.h
+load.o: /usr/include/Xm/IconH.h /usr/include/Xm/Label.h
+load.o: /usr/include/Xm/LabelG.h /usr/include/Xm/List.h
+load.o: /usr/include/Xm/MainW.h /usr/include/Xm/MenuShell.h
+load.o: /usr/include/Xm/MessageB.h /usr/include/Xm/MwmUtil.h
+load.o: /usr/include/X11/Xmd.h /usr/include/Xm/Notebook.h
+load.o: /usr/include/Xm/PanedW.h /usr/include/Xm/Print.h
+load.o: /usr/include/Xm/Protocols.h /usr/include/Xm/PushB.h
+load.o: /usr/include/Xm/PushBG.h /usr/include/Xm/RepType.h
+load.o: /usr/include/Xm/RowColumn.h /usr/include/Xm/SSpinB.h
+load.o: /usr/include/Xm/Scale.h /usr/include/Xm/Screen.h
+load.o: /usr/include/Xm/ScrollBar.h /usr/include/Xm/ScrolledW.h
+load.o: /usr/include/Xm/SelectioB.h /usr/include/Xm/SeparatoG.h
+load.o: /usr/include/Xm/Separator.h /usr/include/Xm/SpinB.h
+load.o: /usr/include/Xm/Text.h /usr/include/Xm/TextF.h
+load.o: /usr/include/Xm/ToggleB.h /usr/include/Xm/ToggleBG.h
+load.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+load.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+load.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+load.o: /usr/include/sys/time.h /usr/include/bits/time.h
+load.o: /usr/include/sys/select.h /usr/include/bits/select.h
+load.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+load.o: /usr/include/GL/gl.h /usr/include/GL/glext.h /usr/include/GL/glu.h
+load.o: /usr/include/GL/glx.h /usr/include/GL/glxtokens.h defines.h structs.h
+load.o: /usr/include/strings.h
+main.o: all.h /usr/include/stdio.h /usr/include/features.h
+main.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+main.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stddef.h
+main.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+main.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+main.o: /usr/include/_G_config.h /usr/include/wchar.h
+main.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+main.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stdarg.h
+main.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+main.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+main.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+main.o: /usr/include/sys/errno.h /usr/include/errno.h
+main.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+main.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+main.o: /usr/include/bits/fcntl.h /usr/include/math.h
+main.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+main.o: /usr/include/bits/mathcalls.h /usr/include/Xm/XmAll.h
+main.o: /usr/include/Xm/Xm.h /usr/include/X11/Intrinsic.h
+main.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+main.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+main.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+main.o: /usr/include/string.h /usr/include/X11/Core.h
+main.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+main.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+main.o: /usr/include/X11/Shell.h /usr/include/X11/SM/SMlib.h
+main.o: /usr/include/X11/SM/SM.h /usr/include/X11/ICE/ICElib.h
+main.o: /usr/include/X11/ICE/ICE.h /usr/include/X11/Xatom.h
+main.o: /usr/include/X11/extensions/Print.h /usr/include/X11/Xauth.h
+main.o: /usr/include/X11/Xfuncs.h /usr/include/Xm/XmStrDefs.h
+main.o: /usr/include/X11/StringDefs.h /usr/include/Xm/XmStrDefs22.h
+main.o: /usr/include/Xm/VirtKeys.h /usr/include/Xm/Transfer.h
+main.o: /usr/include/Xm/DragC.h /usr/include/Xm/Display.h
+main.o: /usr/include/Xm/DropSMgr.h /usr/include/Xm/Primitive.h
+main.o: /usr/include/Xm/Manager.h /usr/include/Xm/Gadget.h
+main.o: /usr/include/Xm/TxtPropCv.h /usr/include/Xm/VendorS.h
+main.o: /usr/include/Xm/XmIm.h /usr/include/Xm/ArrowB.h
+main.o: /usr/include/Xm/ArrowBG.h /usr/include/Xm/AtomMgr.h
+main.o: /usr/include/Xm/BulletinB.h /usr/include/Xm/CascadeB.h
+main.o: /usr/include/Xm/CascadeBG.h /usr/include/Xm/ComboBox.h
+main.o: /usr/include/Xm/Command.h /usr/include/Xm/Container.h
+main.o: /usr/include/Xm/CutPaste.h /usr/include/Xm/DialogS.h
+main.o: /usr/include/Xm/DragDrop.h /usr/include/Xm/DragIcon.h
+main.o: /usr/include/Xm/DropTrans.h /usr/include/Xm/DragOverS.h
+main.o: /usr/include/Xm/DrawingA.h /usr/include/Xm/DrawnB.h
+main.o: /usr/include/Xm/FileSB.h /usr/include/Xm/Form.h
+main.o: /usr/include/Xm/Frame.h /usr/include/Xm/GrabShell.h
+main.o: /usr/include/Xm/IconFile.h /usr/include/Xm/IconG.h
+main.o: /usr/include/Xm/IconH.h /usr/include/Xm/Label.h
+main.o: /usr/include/Xm/LabelG.h /usr/include/Xm/List.h
+main.o: /usr/include/Xm/MainW.h /usr/include/Xm/MenuShell.h
+main.o: /usr/include/Xm/MessageB.h /usr/include/Xm/MwmUtil.h
+main.o: /usr/include/X11/Xmd.h /usr/include/Xm/Notebook.h
+main.o: /usr/include/Xm/PanedW.h /usr/include/Xm/Print.h
+main.o: /usr/include/Xm/Protocols.h /usr/include/Xm/PushB.h
+main.o: /usr/include/Xm/PushBG.h /usr/include/Xm/RepType.h
+main.o: /usr/include/Xm/RowColumn.h /usr/include/Xm/SSpinB.h
+main.o: /usr/include/Xm/Scale.h /usr/include/Xm/Screen.h
+main.o: /usr/include/Xm/ScrollBar.h /usr/include/Xm/ScrolledW.h
+main.o: /usr/include/Xm/SelectioB.h /usr/include/Xm/SeparatoG.h
+main.o: /usr/include/Xm/Separator.h /usr/include/Xm/SpinB.h
+main.o: /usr/include/Xm/Text.h /usr/include/Xm/TextF.h
+main.o: /usr/include/Xm/ToggleB.h /usr/include/Xm/ToggleBG.h
+main.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+main.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+main.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+main.o: /usr/include/sys/time.h /usr/include/bits/time.h
+main.o: /usr/include/sys/select.h /usr/include/bits/select.h
+main.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+main.o: /usr/include/GL/gl.h /usr/include/GL/glext.h /usr/include/GL/glu.h
+main.o: /usr/include/GL/glx.h /usr/include/GL/glxtokens.h defines.h structs.h
+reset.o: all.h /usr/include/stdio.h /usr/include/features.h
+reset.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+reset.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stddef.h
+reset.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+reset.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+reset.o: /usr/include/_G_config.h /usr/include/wchar.h
+reset.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+reset.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stdarg.h
+reset.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+reset.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+reset.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+reset.o: /usr/include/sys/errno.h /usr/include/errno.h
+reset.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+reset.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+reset.o: /usr/include/bits/fcntl.h /usr/include/math.h
+reset.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+reset.o: /usr/include/bits/mathcalls.h /usr/include/Xm/XmAll.h
+reset.o: /usr/include/Xm/Xm.h /usr/include/X11/Intrinsic.h
+reset.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+reset.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+reset.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+reset.o: /usr/include/string.h /usr/include/X11/Core.h
+reset.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+reset.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+reset.o: /usr/include/X11/Shell.h /usr/include/X11/SM/SMlib.h
+reset.o: /usr/include/X11/SM/SM.h /usr/include/X11/ICE/ICElib.h
+reset.o: /usr/include/X11/ICE/ICE.h /usr/include/X11/Xatom.h
+reset.o: /usr/include/X11/extensions/Print.h /usr/include/X11/Xauth.h
+reset.o: /usr/include/X11/Xfuncs.h /usr/include/Xm/XmStrDefs.h
+reset.o: /usr/include/X11/StringDefs.h /usr/include/Xm/XmStrDefs22.h
+reset.o: /usr/include/Xm/VirtKeys.h /usr/include/Xm/Transfer.h
+reset.o: /usr/include/Xm/DragC.h /usr/include/Xm/Display.h
+reset.o: /usr/include/Xm/DropSMgr.h /usr/include/Xm/Primitive.h
+reset.o: /usr/include/Xm/Manager.h /usr/include/Xm/Gadget.h
+reset.o: /usr/include/Xm/TxtPropCv.h /usr/include/Xm/VendorS.h
+reset.o: /usr/include/Xm/XmIm.h /usr/include/Xm/ArrowB.h
+reset.o: /usr/include/Xm/ArrowBG.h /usr/include/Xm/AtomMgr.h
+reset.o: /usr/include/Xm/BulletinB.h /usr/include/Xm/CascadeB.h
+reset.o: /usr/include/Xm/CascadeBG.h /usr/include/Xm/ComboBox.h
+reset.o: /usr/include/Xm/Command.h /usr/include/Xm/Container.h
+reset.o: /usr/include/Xm/CutPaste.h /usr/include/Xm/DialogS.h
+reset.o: /usr/include/Xm/DragDrop.h /usr/include/Xm/DragIcon.h
+reset.o: /usr/include/Xm/DropTrans.h /usr/include/Xm/DragOverS.h
+reset.o: /usr/include/Xm/DrawingA.h /usr/include/Xm/DrawnB.h
+reset.o: /usr/include/Xm/FileSB.h /usr/include/Xm/Form.h
+reset.o: /usr/include/Xm/Frame.h /usr/include/Xm/GrabShell.h
+reset.o: /usr/include/Xm/IconFile.h /usr/include/Xm/IconG.h
+reset.o: /usr/include/Xm/IconH.h /usr/include/Xm/Label.h
+reset.o: /usr/include/Xm/LabelG.h /usr/include/Xm/List.h
+reset.o: /usr/include/Xm/MainW.h /usr/include/Xm/MenuShell.h
+reset.o: /usr/include/Xm/MessageB.h /usr/include/Xm/MwmUtil.h
+reset.o: /usr/include/X11/Xmd.h /usr/include/Xm/Notebook.h
+reset.o: /usr/include/Xm/PanedW.h /usr/include/Xm/Print.h
+reset.o: /usr/include/Xm/Protocols.h /usr/include/Xm/PushB.h
+reset.o: /usr/include/Xm/PushBG.h /usr/include/Xm/RepType.h
+reset.o: /usr/include/Xm/RowColumn.h /usr/include/Xm/SSpinB.h
+reset.o: /usr/include/Xm/Scale.h /usr/include/Xm/Screen.h
+reset.o: /usr/include/Xm/ScrollBar.h /usr/include/Xm/ScrolledW.h
+reset.o: /usr/include/Xm/SelectioB.h /usr/include/Xm/SeparatoG.h
+reset.o: /usr/include/Xm/Separator.h /usr/include/Xm/SpinB.h
+reset.o: /usr/include/Xm/Text.h /usr/include/Xm/TextF.h
+reset.o: /usr/include/Xm/ToggleB.h /usr/include/Xm/ToggleBG.h
+reset.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+reset.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+reset.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+reset.o: /usr/include/sys/time.h /usr/include/bits/time.h
+reset.o: /usr/include/sys/select.h /usr/include/bits/select.h
+reset.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+reset.o: /usr/include/GL/gl.h /usr/include/GL/glext.h /usr/include/GL/glu.h
+reset.o: /usr/include/GL/glx.h /usr/include/GL/glxtokens.h defines.h
+reset.o: structs.h
+save.o: all.h /usr/include/stdio.h /usr/include/features.h
+save.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+save.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stddef.h
+save.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+save.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+save.o: /usr/include/_G_config.h /usr/include/wchar.h
+save.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+save.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stdarg.h
+save.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+save.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+save.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+save.o: /usr/include/sys/errno.h /usr/include/errno.h
+save.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+save.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+save.o: /usr/include/bits/fcntl.h /usr/include/math.h
+save.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+save.o: /usr/include/bits/mathcalls.h /usr/include/Xm/XmAll.h
+save.o: /usr/include/Xm/Xm.h /usr/include/X11/Intrinsic.h
+save.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+save.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+save.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+save.o: /usr/include/string.h /usr/include/X11/Core.h
+save.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+save.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+save.o: /usr/include/X11/Shell.h /usr/include/X11/SM/SMlib.h
+save.o: /usr/include/X11/SM/SM.h /usr/include/X11/ICE/ICElib.h
+save.o: /usr/include/X11/ICE/ICE.h /usr/include/X11/Xatom.h
+save.o: /usr/include/X11/extensions/Print.h /usr/include/X11/Xauth.h
+save.o: /usr/include/X11/Xfuncs.h /usr/include/Xm/XmStrDefs.h
+save.o: /usr/include/X11/StringDefs.h /usr/include/Xm/XmStrDefs22.h
+save.o: /usr/include/Xm/VirtKeys.h /usr/include/Xm/Transfer.h
+save.o: /usr/include/Xm/DragC.h /usr/include/Xm/Display.h
+save.o: /usr/include/Xm/DropSMgr.h /usr/include/Xm/Primitive.h
+save.o: /usr/include/Xm/Manager.h /usr/include/Xm/Gadget.h
+save.o: /usr/include/Xm/TxtPropCv.h /usr/include/Xm/VendorS.h
+save.o: /usr/include/Xm/XmIm.h /usr/include/Xm/ArrowB.h
+save.o: /usr/include/Xm/ArrowBG.h /usr/include/Xm/AtomMgr.h
+save.o: /usr/include/Xm/BulletinB.h /usr/include/Xm/CascadeB.h
+save.o: /usr/include/Xm/CascadeBG.h /usr/include/Xm/ComboBox.h
+save.o: /usr/include/Xm/Command.h /usr/include/Xm/Container.h
+save.o: /usr/include/Xm/CutPaste.h /usr/include/Xm/DialogS.h
+save.o: /usr/include/Xm/DragDrop.h /usr/include/Xm/DragIcon.h
+save.o: /usr/include/Xm/DropTrans.h /usr/include/Xm/DragOverS.h
+save.o: /usr/include/Xm/DrawingA.h /usr/include/Xm/DrawnB.h
+save.o: /usr/include/Xm/FileSB.h /usr/include/Xm/Form.h
+save.o: /usr/include/Xm/Frame.h /usr/include/Xm/GrabShell.h
+save.o: /usr/include/Xm/IconFile.h /usr/include/Xm/IconG.h
+save.o: /usr/include/Xm/IconH.h /usr/include/Xm/Label.h
+save.o: /usr/include/Xm/LabelG.h /usr/include/Xm/List.h
+save.o: /usr/include/Xm/MainW.h /usr/include/Xm/MenuShell.h
+save.o: /usr/include/Xm/MessageB.h /usr/include/Xm/MwmUtil.h
+save.o: /usr/include/X11/Xmd.h /usr/include/Xm/Notebook.h
+save.o: /usr/include/Xm/PanedW.h /usr/include/Xm/Print.h
+save.o: /usr/include/Xm/Protocols.h /usr/include/Xm/PushB.h
+save.o: /usr/include/Xm/PushBG.h /usr/include/Xm/RepType.h
+save.o: /usr/include/Xm/RowColumn.h /usr/include/Xm/SSpinB.h
+save.o: /usr/include/Xm/Scale.h /usr/include/Xm/Screen.h
+save.o: /usr/include/Xm/ScrollBar.h /usr/include/Xm/ScrolledW.h
+save.o: /usr/include/Xm/SelectioB.h /usr/include/Xm/SeparatoG.h
+save.o: /usr/include/Xm/Separator.h /usr/include/Xm/SpinB.h
+save.o: /usr/include/Xm/Text.h /usr/include/Xm/TextF.h
+save.o: /usr/include/Xm/ToggleB.h /usr/include/Xm/ToggleBG.h
+save.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+save.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+save.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+save.o: /usr/include/sys/time.h /usr/include/bits/time.h
+save.o: /usr/include/sys/select.h /usr/include/bits/select.h
+save.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+save.o: /usr/include/GL/gl.h /usr/include/GL/glext.h /usr/include/GL/glu.h
+save.o: /usr/include/GL/glx.h /usr/include/GL/glxtokens.h defines.h structs.h
+transform.o: all.h /usr/include/stdio.h /usr/include/features.h
+transform.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+transform.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stddef.h
+transform.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+transform.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+transform.o: /usr/include/_G_config.h /usr/include/wchar.h
+transform.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+transform.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stdarg.h
+transform.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+transform.o: /usr/include/stdlib.h /usr/include/sys/types.h
+transform.o: /usr/include/time.h /usr/include/sys/stat.h
+transform.o: /usr/include/bits/stat.h /usr/include/sys/errno.h
+transform.o: /usr/include/errno.h /usr/include/bits/errno.h
+transform.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+transform.o: /usr/include/fcntl.h /usr/include/bits/fcntl.h
+transform.o: /usr/include/math.h /usr/include/bits/huge_val.h
+transform.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+transform.o: /usr/include/Xm/XmAll.h /usr/include/Xm/Xm.h
+transform.o: /usr/include/X11/Intrinsic.h /usr/include/X11/Xlib.h
+transform.o: /usr/include/X11/X.h /usr/include/X11/Xfuncproto.h
+transform.o: /usr/include/X11/Xosdefs.h /usr/include/X11/Xutil.h
+transform.o: /usr/include/X11/Xresource.h /usr/include/string.h
+transform.o: /usr/include/X11/Core.h /usr/include/X11/Composite.h
+transform.o: /usr/include/X11/Constraint.h /usr/include/X11/Object.h
+transform.o: /usr/include/X11/RectObj.h /usr/include/X11/Shell.h
+transform.o: /usr/include/X11/SM/SMlib.h /usr/include/X11/SM/SM.h
+transform.o: /usr/include/X11/ICE/ICElib.h /usr/include/X11/ICE/ICE.h
+transform.o: /usr/include/X11/Xatom.h /usr/include/X11/extensions/Print.h
+transform.o: /usr/include/X11/Xauth.h /usr/include/X11/Xfuncs.h
+transform.o: /usr/include/Xm/XmStrDefs.h /usr/include/X11/StringDefs.h
+transform.o: /usr/include/Xm/XmStrDefs22.h /usr/include/Xm/VirtKeys.h
+transform.o: /usr/include/Xm/Transfer.h /usr/include/Xm/DragC.h
+transform.o: /usr/include/Xm/Display.h /usr/include/Xm/DropSMgr.h
+transform.o: /usr/include/Xm/Primitive.h /usr/include/Xm/Manager.h
+transform.o: /usr/include/Xm/Gadget.h /usr/include/Xm/TxtPropCv.h
+transform.o: /usr/include/Xm/VendorS.h /usr/include/Xm/XmIm.h
+transform.o: /usr/include/Xm/ArrowB.h /usr/include/Xm/ArrowBG.h
+transform.o: /usr/include/Xm/AtomMgr.h /usr/include/Xm/BulletinB.h
+transform.o: /usr/include/Xm/CascadeB.h /usr/include/Xm/CascadeBG.h
+transform.o: /usr/include/Xm/ComboBox.h /usr/include/Xm/Command.h
+transform.o: /usr/include/Xm/Container.h /usr/include/Xm/CutPaste.h
+transform.o: /usr/include/Xm/DialogS.h /usr/include/Xm/DragDrop.h
+transform.o: /usr/include/Xm/DragIcon.h /usr/include/Xm/DropTrans.h
+transform.o: /usr/include/Xm/DragOverS.h /usr/include/Xm/DrawingA.h
+transform.o: /usr/include/Xm/DrawnB.h /usr/include/Xm/FileSB.h
+transform.o: /usr/include/Xm/Form.h /usr/include/Xm/Frame.h
+transform.o: /usr/include/Xm/GrabShell.h /usr/include/Xm/IconFile.h
+transform.o: /usr/include/Xm/IconG.h /usr/include/Xm/IconH.h
+transform.o: /usr/include/Xm/Label.h /usr/include/Xm/LabelG.h
+transform.o: /usr/include/Xm/List.h /usr/include/Xm/MainW.h
+transform.o: /usr/include/Xm/MenuShell.h /usr/include/Xm/MessageB.h
+transform.o: /usr/include/Xm/MwmUtil.h /usr/include/X11/Xmd.h
+transform.o: /usr/include/Xm/Notebook.h /usr/include/Xm/PanedW.h
+transform.o: /usr/include/Xm/Print.h /usr/include/Xm/Protocols.h
+transform.o: /usr/include/Xm/PushB.h /usr/include/Xm/PushBG.h
+transform.o: /usr/include/Xm/RepType.h /usr/include/Xm/RowColumn.h
+transform.o: /usr/include/Xm/SSpinB.h /usr/include/Xm/Scale.h
+transform.o: /usr/include/Xm/Screen.h /usr/include/Xm/ScrollBar.h
+transform.o: /usr/include/Xm/ScrolledW.h /usr/include/Xm/SelectioB.h
+transform.o: /usr/include/Xm/SeparatoG.h /usr/include/Xm/Separator.h
+transform.o: /usr/include/Xm/SpinB.h /usr/include/Xm/Text.h
+transform.o: /usr/include/Xm/TextF.h /usr/include/Xm/ToggleB.h
+transform.o: /usr/include/Xm/ToggleBG.h /usr/include/X11/keysym.h
+transform.o: /usr/include/X11/keysymdef.h /usr/include/X11/Xos.h
+transform.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
+transform.o: /usr/include/bits/confname.h /usr/include/sys/time.h
+transform.o: /usr/include/bits/time.h /usr/include/sys/select.h
+transform.o: /usr/include/bits/select.h /usr/include/bits/sigset.h
+transform.o: /usr/include/X11/Xarch.h /usr/include/GL/gl.h
+transform.o: /usr/include/GL/glext.h /usr/include/GL/glu.h
+transform.o: /usr/include/GL/glx.h /usr/include/GL/glxtokens.h defines.h
+transform.o: structs.h
+ui.o: all.h /usr/include/stdio.h /usr/include/features.h
+ui.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+ui.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stddef.h
+ui.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+ui.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+ui.o: /usr/include/_G_config.h /usr/include/wchar.h /usr/include/bits/wchar.h
+ui.o: /usr/include/gconv.h
+ui.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stdarg.h
+ui.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+ui.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+ui.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+ui.o: /usr/include/sys/errno.h /usr/include/errno.h /usr/include/bits/errno.h
+ui.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+ui.o: /usr/include/fcntl.h /usr/include/bits/fcntl.h /usr/include/math.h
+ui.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+ui.o: /usr/include/bits/mathcalls.h /usr/include/Xm/XmAll.h
+ui.o: /usr/include/Xm/Xm.h /usr/include/X11/Intrinsic.h
+ui.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+ui.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+ui.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+ui.o: /usr/include/string.h /usr/include/X11/Core.h
+ui.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+ui.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+ui.o: /usr/include/X11/Shell.h /usr/include/X11/SM/SMlib.h
+ui.o: /usr/include/X11/SM/SM.h /usr/include/X11/ICE/ICElib.h
+ui.o: /usr/include/X11/ICE/ICE.h /usr/include/X11/Xatom.h
+ui.o: /usr/include/X11/extensions/Print.h /usr/include/X11/Xauth.h
+ui.o: /usr/include/X11/Xfuncs.h /usr/include/Xm/XmStrDefs.h
+ui.o: /usr/include/X11/StringDefs.h /usr/include/Xm/XmStrDefs22.h
+ui.o: /usr/include/Xm/VirtKeys.h /usr/include/Xm/Transfer.h
+ui.o: /usr/include/Xm/DragC.h /usr/include/Xm/Display.h
+ui.o: /usr/include/Xm/DropSMgr.h /usr/include/Xm/Primitive.h
+ui.o: /usr/include/Xm/Manager.h /usr/include/Xm/Gadget.h
+ui.o: /usr/include/Xm/TxtPropCv.h /usr/include/Xm/VendorS.h
+ui.o: /usr/include/Xm/XmIm.h /usr/include/Xm/ArrowB.h
+ui.o: /usr/include/Xm/ArrowBG.h /usr/include/Xm/AtomMgr.h
+ui.o: /usr/include/Xm/BulletinB.h /usr/include/Xm/CascadeB.h
+ui.o: /usr/include/Xm/CascadeBG.h /usr/include/Xm/ComboBox.h
+ui.o: /usr/include/Xm/Command.h /usr/include/Xm/Container.h
+ui.o: /usr/include/Xm/CutPaste.h /usr/include/Xm/DialogS.h
+ui.o: /usr/include/Xm/DragDrop.h /usr/include/Xm/DragIcon.h
+ui.o: /usr/include/Xm/DropTrans.h /usr/include/Xm/DragOverS.h
+ui.o: /usr/include/Xm/DrawingA.h /usr/include/Xm/DrawnB.h
+ui.o: /usr/include/Xm/FileSB.h /usr/include/Xm/Form.h /usr/include/Xm/Frame.h
+ui.o: /usr/include/Xm/GrabShell.h /usr/include/Xm/IconFile.h
+ui.o: /usr/include/Xm/IconG.h /usr/include/Xm/IconH.h /usr/include/Xm/Label.h
+ui.o: /usr/include/Xm/LabelG.h /usr/include/Xm/List.h /usr/include/Xm/MainW.h
+ui.o: /usr/include/Xm/MenuShell.h /usr/include/Xm/MessageB.h
+ui.o: /usr/include/Xm/MwmUtil.h /usr/include/X11/Xmd.h
+ui.o: /usr/include/Xm/Notebook.h /usr/include/Xm/PanedW.h
+ui.o: /usr/include/Xm/Print.h /usr/include/Xm/Protocols.h
+ui.o: /usr/include/Xm/PushB.h /usr/include/Xm/PushBG.h
+ui.o: /usr/include/Xm/RepType.h /usr/include/Xm/RowColumn.h
+ui.o: /usr/include/Xm/SSpinB.h /usr/include/Xm/Scale.h
+ui.o: /usr/include/Xm/Screen.h /usr/include/Xm/ScrollBar.h
+ui.o: /usr/include/Xm/ScrolledW.h /usr/include/Xm/SelectioB.h
+ui.o: /usr/include/Xm/SeparatoG.h /usr/include/Xm/Separator.h
+ui.o: /usr/include/Xm/SpinB.h /usr/include/Xm/Text.h /usr/include/Xm/TextF.h
+ui.o: /usr/include/Xm/ToggleB.h /usr/include/Xm/ToggleBG.h
+ui.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+ui.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+ui.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+ui.o: /usr/include/sys/time.h /usr/include/bits/time.h
+ui.o: /usr/include/sys/select.h /usr/include/bits/select.h
+ui.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+ui.o: /usr/include/GL/gl.h /usr/include/GL/glext.h /usr/include/GL/glu.h
+ui.o: /usr/include/GL/glx.h /usr/include/GL/glxtokens.h defines.h structs.h
+ui_init.o: all.h /usr/include/stdio.h /usr/include/features.h
+ui_init.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+ui_init.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stddef.h
+ui_init.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+ui_init.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+ui_init.o: /usr/include/_G_config.h /usr/include/wchar.h
+ui_init.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+ui_init.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stdarg.h
+ui_init.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+ui_init.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+ui_init.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+ui_init.o: /usr/include/sys/errno.h /usr/include/errno.h
+ui_init.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+ui_init.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+ui_init.o: /usr/include/bits/fcntl.h /usr/include/math.h
+ui_init.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+ui_init.o: /usr/include/bits/mathcalls.h /usr/include/Xm/XmAll.h
+ui_init.o: /usr/include/Xm/Xm.h /usr/include/X11/Intrinsic.h
+ui_init.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+ui_init.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+ui_init.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+ui_init.o: /usr/include/string.h /usr/include/X11/Core.h
+ui_init.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+ui_init.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+ui_init.o: /usr/include/X11/Shell.h /usr/include/X11/SM/SMlib.h
+ui_init.o: /usr/include/X11/SM/SM.h /usr/include/X11/ICE/ICElib.h
+ui_init.o: /usr/include/X11/ICE/ICE.h /usr/include/X11/Xatom.h
+ui_init.o: /usr/include/X11/extensions/Print.h /usr/include/X11/Xauth.h
+ui_init.o: /usr/include/X11/Xfuncs.h /usr/include/Xm/XmStrDefs.h
+ui_init.o: /usr/include/X11/StringDefs.h /usr/include/Xm/XmStrDefs22.h
+ui_init.o: /usr/include/Xm/VirtKeys.h /usr/include/Xm/Transfer.h
+ui_init.o: /usr/include/Xm/DragC.h /usr/include/Xm/Display.h
+ui_init.o: /usr/include/Xm/DropSMgr.h /usr/include/Xm/Primitive.h
+ui_init.o: /usr/include/Xm/Manager.h /usr/include/Xm/Gadget.h
+ui_init.o: /usr/include/Xm/TxtPropCv.h /usr/include/Xm/VendorS.h
+ui_init.o: /usr/include/Xm/XmIm.h /usr/include/Xm/ArrowB.h
+ui_init.o: /usr/include/Xm/ArrowBG.h /usr/include/Xm/AtomMgr.h
+ui_init.o: /usr/include/Xm/BulletinB.h /usr/include/Xm/CascadeB.h
+ui_init.o: /usr/include/Xm/CascadeBG.h /usr/include/Xm/ComboBox.h
+ui_init.o: /usr/include/Xm/Command.h /usr/include/Xm/Container.h
+ui_init.o: /usr/include/Xm/CutPaste.h /usr/include/Xm/DialogS.h
+ui_init.o: /usr/include/Xm/DragDrop.h /usr/include/Xm/DragIcon.h
+ui_init.o: /usr/include/Xm/DropTrans.h /usr/include/Xm/DragOverS.h
+ui_init.o: /usr/include/Xm/DrawingA.h /usr/include/Xm/DrawnB.h
+ui_init.o: /usr/include/Xm/FileSB.h /usr/include/Xm/Form.h
+ui_init.o: /usr/include/Xm/Frame.h /usr/include/Xm/GrabShell.h
+ui_init.o: /usr/include/Xm/IconFile.h /usr/include/Xm/IconG.h
+ui_init.o: /usr/include/Xm/IconH.h /usr/include/Xm/Label.h
+ui_init.o: /usr/include/Xm/LabelG.h /usr/include/Xm/List.h
+ui_init.o: /usr/include/Xm/MainW.h /usr/include/Xm/MenuShell.h
+ui_init.o: /usr/include/Xm/MessageB.h /usr/include/Xm/MwmUtil.h
+ui_init.o: /usr/include/X11/Xmd.h /usr/include/Xm/Notebook.h
+ui_init.o: /usr/include/Xm/PanedW.h /usr/include/Xm/Print.h
+ui_init.o: /usr/include/Xm/Protocols.h /usr/include/Xm/PushB.h
+ui_init.o: /usr/include/Xm/PushBG.h /usr/include/Xm/RepType.h
+ui_init.o: /usr/include/Xm/RowColumn.h /usr/include/Xm/SSpinB.h
+ui_init.o: /usr/include/Xm/Scale.h /usr/include/Xm/Screen.h
+ui_init.o: /usr/include/Xm/ScrollBar.h /usr/include/Xm/ScrolledW.h
+ui_init.o: /usr/include/Xm/SelectioB.h /usr/include/Xm/SeparatoG.h
+ui_init.o: /usr/include/Xm/Separator.h /usr/include/Xm/SpinB.h
+ui_init.o: /usr/include/Xm/Text.h /usr/include/Xm/TextF.h
+ui_init.o: /usr/include/Xm/ToggleB.h /usr/include/Xm/ToggleBG.h
+ui_init.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+ui_init.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+ui_init.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+ui_init.o: /usr/include/sys/time.h /usr/include/bits/time.h
+ui_init.o: /usr/include/sys/select.h /usr/include/bits/select.h
+ui_init.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+ui_init.o: /usr/include/GL/gl.h /usr/include/GL/glext.h /usr/include/GL/glu.h
+ui_init.o: /usr/include/GL/glx.h /usr/include/GL/glxtokens.h defines.h
+ui_init.o: structs.h
+ui_picker.o: all.h /usr/include/stdio.h /usr/include/features.h
+ui_picker.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+ui_picker.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stddef.h
+ui_picker.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+ui_picker.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+ui_picker.o: /usr/include/_G_config.h /usr/include/wchar.h
+ui_picker.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+ui_picker.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stdarg.h
+ui_picker.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+ui_picker.o: /usr/include/stdlib.h /usr/include/sys/types.h
+ui_picker.o: /usr/include/time.h /usr/include/sys/stat.h
+ui_picker.o: /usr/include/bits/stat.h /usr/include/sys/errno.h
+ui_picker.o: /usr/include/errno.h /usr/include/bits/errno.h
+ui_picker.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+ui_picker.o: /usr/include/fcntl.h /usr/include/bits/fcntl.h
+ui_picker.o: /usr/include/math.h /usr/include/bits/huge_val.h
+ui_picker.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+ui_picker.o: /usr/include/Xm/XmAll.h /usr/include/Xm/Xm.h
+ui_picker.o: /usr/include/X11/Intrinsic.h /usr/include/X11/Xlib.h
+ui_picker.o: /usr/include/X11/X.h /usr/include/X11/Xfuncproto.h
+ui_picker.o: /usr/include/X11/Xosdefs.h /usr/include/X11/Xutil.h
+ui_picker.o: /usr/include/X11/Xresource.h /usr/include/string.h
+ui_picker.o: /usr/include/X11/Core.h /usr/include/X11/Composite.h
+ui_picker.o: /usr/include/X11/Constraint.h /usr/include/X11/Object.h
+ui_picker.o: /usr/include/X11/RectObj.h /usr/include/X11/Shell.h
+ui_picker.o: /usr/include/X11/SM/SMlib.h /usr/include/X11/SM/SM.h
+ui_picker.o: /usr/include/X11/ICE/ICElib.h /usr/include/X11/ICE/ICE.h
+ui_picker.o: /usr/include/X11/Xatom.h /usr/include/X11/extensions/Print.h
+ui_picker.o: /usr/include/X11/Xauth.h /usr/include/X11/Xfuncs.h
+ui_picker.o: /usr/include/Xm/XmStrDefs.h /usr/include/X11/StringDefs.h
+ui_picker.o: /usr/include/Xm/XmStrDefs22.h /usr/include/Xm/VirtKeys.h
+ui_picker.o: /usr/include/Xm/Transfer.h /usr/include/Xm/DragC.h
+ui_picker.o: /usr/include/Xm/Display.h /usr/include/Xm/DropSMgr.h
+ui_picker.o: /usr/include/Xm/Primitive.h /usr/include/Xm/Manager.h
+ui_picker.o: /usr/include/Xm/Gadget.h /usr/include/Xm/TxtPropCv.h
+ui_picker.o: /usr/include/Xm/VendorS.h /usr/include/Xm/XmIm.h
+ui_picker.o: /usr/include/Xm/ArrowB.h /usr/include/Xm/ArrowBG.h
+ui_picker.o: /usr/include/Xm/AtomMgr.h /usr/include/Xm/BulletinB.h
+ui_picker.o: /usr/include/Xm/CascadeB.h /usr/include/Xm/CascadeBG.h
+ui_picker.o: /usr/include/Xm/ComboBox.h /usr/include/Xm/Command.h
+ui_picker.o: /usr/include/Xm/Container.h /usr/include/Xm/CutPaste.h
+ui_picker.o: /usr/include/Xm/DialogS.h /usr/include/Xm/DragDrop.h
+ui_picker.o: /usr/include/Xm/DragIcon.h /usr/include/Xm/DropTrans.h
+ui_picker.o: /usr/include/Xm/DragOverS.h /usr/include/Xm/DrawingA.h
+ui_picker.o: /usr/include/Xm/DrawnB.h /usr/include/Xm/FileSB.h
+ui_picker.o: /usr/include/Xm/Form.h /usr/include/Xm/Frame.h
+ui_picker.o: /usr/include/Xm/GrabShell.h /usr/include/Xm/IconFile.h
+ui_picker.o: /usr/include/Xm/IconG.h /usr/include/Xm/IconH.h
+ui_picker.o: /usr/include/Xm/Label.h /usr/include/Xm/LabelG.h
+ui_picker.o: /usr/include/Xm/List.h /usr/include/Xm/MainW.h
+ui_picker.o: /usr/include/Xm/MenuShell.h /usr/include/Xm/MessageB.h
+ui_picker.o: /usr/include/Xm/MwmUtil.h /usr/include/X11/Xmd.h
+ui_picker.o: /usr/include/Xm/Notebook.h /usr/include/Xm/PanedW.h
+ui_picker.o: /usr/include/Xm/Print.h /usr/include/Xm/Protocols.h
+ui_picker.o: /usr/include/Xm/PushB.h /usr/include/Xm/PushBG.h
+ui_picker.o: /usr/include/Xm/RepType.h /usr/include/Xm/RowColumn.h
+ui_picker.o: /usr/include/Xm/SSpinB.h /usr/include/Xm/Scale.h
+ui_picker.o: /usr/include/Xm/Screen.h /usr/include/Xm/ScrollBar.h
+ui_picker.o: /usr/include/Xm/ScrolledW.h /usr/include/Xm/SelectioB.h
+ui_picker.o: /usr/include/Xm/SeparatoG.h /usr/include/Xm/Separator.h
+ui_picker.o: /usr/include/Xm/SpinB.h /usr/include/Xm/Text.h
+ui_picker.o: /usr/include/Xm/TextF.h /usr/include/Xm/ToggleB.h
+ui_picker.o: /usr/include/Xm/ToggleBG.h /usr/include/X11/keysym.h
+ui_picker.o: /usr/include/X11/keysymdef.h /usr/include/X11/Xos.h
+ui_picker.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
+ui_picker.o: /usr/include/bits/confname.h /usr/include/sys/time.h
+ui_picker.o: /usr/include/bits/time.h /usr/include/sys/select.h
+ui_picker.o: /usr/include/bits/select.h /usr/include/bits/sigset.h
+ui_picker.o: /usr/include/X11/Xarch.h /usr/include/GL/gl.h
+ui_picker.o: /usr/include/GL/glext.h /usr/include/GL/glu.h
+ui_picker.o: /usr/include/GL/glx.h /usr/include/GL/glxtokens.h defines.h
+ui_picker.o: structs.h
+ui_setting.o: all.h /usr/include/stdio.h /usr/include/features.h
+ui_setting.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+ui_setting.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stddef.h
+ui_setting.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+ui_setting.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+ui_setting.o: /usr/include/_G_config.h /usr/include/wchar.h
+ui_setting.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+ui_setting.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stdarg.h
+ui_setting.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+ui_setting.o: /usr/include/stdlib.h /usr/include/sys/types.h
+ui_setting.o: /usr/include/time.h /usr/include/sys/stat.h
+ui_setting.o: /usr/include/bits/stat.h /usr/include/sys/errno.h
+ui_setting.o: /usr/include/errno.h /usr/include/bits/errno.h
+ui_setting.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+ui_setting.o: /usr/include/fcntl.h /usr/include/bits/fcntl.h
+ui_setting.o: /usr/include/math.h /usr/include/bits/huge_val.h
+ui_setting.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+ui_setting.o: /usr/include/Xm/XmAll.h /usr/include/Xm/Xm.h
+ui_setting.o: /usr/include/X11/Intrinsic.h /usr/include/X11/Xlib.h
+ui_setting.o: /usr/include/X11/X.h /usr/include/X11/Xfuncproto.h
+ui_setting.o: /usr/include/X11/Xosdefs.h /usr/include/X11/Xutil.h
+ui_setting.o: /usr/include/X11/Xresource.h /usr/include/string.h
+ui_setting.o: /usr/include/X11/Core.h /usr/include/X11/Composite.h
+ui_setting.o: /usr/include/X11/Constraint.h /usr/include/X11/Object.h
+ui_setting.o: /usr/include/X11/RectObj.h /usr/include/X11/Shell.h
+ui_setting.o: /usr/include/X11/SM/SMlib.h /usr/include/X11/SM/SM.h
+ui_setting.o: /usr/include/X11/ICE/ICElib.h /usr/include/X11/ICE/ICE.h
+ui_setting.o: /usr/include/X11/Xatom.h /usr/include/X11/extensions/Print.h
+ui_setting.o: /usr/include/X11/Xauth.h /usr/include/X11/Xfuncs.h
+ui_setting.o: /usr/include/Xm/XmStrDefs.h /usr/include/X11/StringDefs.h
+ui_setting.o: /usr/include/Xm/XmStrDefs22.h /usr/include/Xm/VirtKeys.h
+ui_setting.o: /usr/include/Xm/Transfer.h /usr/include/Xm/DragC.h
+ui_setting.o: /usr/include/Xm/Display.h /usr/include/Xm/DropSMgr.h
+ui_setting.o: /usr/include/Xm/Primitive.h /usr/include/Xm/Manager.h
+ui_setting.o: /usr/include/Xm/Gadget.h /usr/include/Xm/TxtPropCv.h
+ui_setting.o: /usr/include/Xm/VendorS.h /usr/include/Xm/XmIm.h
+ui_setting.o: /usr/include/Xm/ArrowB.h /usr/include/Xm/ArrowBG.h
+ui_setting.o: /usr/include/Xm/AtomMgr.h /usr/include/Xm/BulletinB.h
+ui_setting.o: /usr/include/Xm/CascadeB.h /usr/include/Xm/CascadeBG.h
+ui_setting.o: /usr/include/Xm/ComboBox.h /usr/include/Xm/Command.h
+ui_setting.o: /usr/include/Xm/Container.h /usr/include/Xm/CutPaste.h
+ui_setting.o: /usr/include/Xm/DialogS.h /usr/include/Xm/DragDrop.h
+ui_setting.o: /usr/include/Xm/DragIcon.h /usr/include/Xm/DropTrans.h
+ui_setting.o: /usr/include/Xm/DragOverS.h /usr/include/Xm/DrawingA.h
+ui_setting.o: /usr/include/Xm/DrawnB.h /usr/include/Xm/FileSB.h
+ui_setting.o: /usr/include/Xm/Form.h /usr/include/Xm/Frame.h
+ui_setting.o: /usr/include/Xm/GrabShell.h /usr/include/Xm/IconFile.h
+ui_setting.o: /usr/include/Xm/IconG.h /usr/include/Xm/IconH.h
+ui_setting.o: /usr/include/Xm/Label.h /usr/include/Xm/LabelG.h
+ui_setting.o: /usr/include/Xm/List.h /usr/include/Xm/MainW.h
+ui_setting.o: /usr/include/Xm/MenuShell.h /usr/include/Xm/MessageB.h
+ui_setting.o: /usr/include/Xm/MwmUtil.h /usr/include/X11/Xmd.h
+ui_setting.o: /usr/include/Xm/Notebook.h /usr/include/Xm/PanedW.h
+ui_setting.o: /usr/include/Xm/Print.h /usr/include/Xm/Protocols.h
+ui_setting.o: /usr/include/Xm/PushB.h /usr/include/Xm/PushBG.h
+ui_setting.o: /usr/include/Xm/RepType.h /usr/include/Xm/RowColumn.h
+ui_setting.o: /usr/include/Xm/SSpinB.h /usr/include/Xm/Scale.h
+ui_setting.o: /usr/include/Xm/Screen.h /usr/include/Xm/ScrollBar.h
+ui_setting.o: /usr/include/Xm/ScrolledW.h /usr/include/Xm/SelectioB.h
+ui_setting.o: /usr/include/Xm/SeparatoG.h /usr/include/Xm/Separator.h
+ui_setting.o: /usr/include/Xm/SpinB.h /usr/include/Xm/Text.h
+ui_setting.o: /usr/include/Xm/TextF.h /usr/include/Xm/ToggleB.h
+ui_setting.o: /usr/include/Xm/ToggleBG.h /usr/include/X11/keysym.h
+ui_setting.o: /usr/include/X11/keysymdef.h /usr/include/X11/Xos.h
+ui_setting.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
+ui_setting.o: /usr/include/bits/confname.h /usr/include/sys/time.h
+ui_setting.o: /usr/include/bits/time.h /usr/include/sys/select.h
+ui_setting.o: /usr/include/bits/select.h /usr/include/bits/sigset.h
+ui_setting.o: /usr/include/X11/Xarch.h /usr/include/GL/gl.h
+ui_setting.o: /usr/include/GL/glext.h /usr/include/GL/glu.h
+ui_setting.o: /usr/include/GL/glx.h /usr/include/GL/glxtokens.h defines.h
+ui_setting.o: structs.h
+ui_frames.o: /usr/include/sys/time.h /usr/include/features.h
+ui_frames.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+ui_frames.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+ui_frames.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stddef.h
+ui_frames.o: /usr/include/bits/typesizes.h /usr/include/time.h
+ui_frames.o: /usr/include/bits/time.h /usr/include/sys/select.h
+ui_frames.o: /usr/include/bits/select.h /usr/include/bits/sigset.h all.h
+ui_frames.o: /usr/include/stdio.h /usr/include/libio.h
+ui_frames.o: /usr/include/_G_config.h /usr/include/wchar.h
+ui_frames.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+ui_frames.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stdarg.h
+ui_frames.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+ui_frames.o: /usr/include/stdlib.h /usr/include/sys/types.h
+ui_frames.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+ui_frames.o: /usr/include/sys/errno.h /usr/include/errno.h
+ui_frames.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+ui_frames.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+ui_frames.o: /usr/include/bits/fcntl.h /usr/include/math.h
+ui_frames.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+ui_frames.o: /usr/include/bits/mathcalls.h /usr/include/Xm/XmAll.h
+ui_frames.o: /usr/include/Xm/Xm.h /usr/include/X11/Intrinsic.h
+ui_frames.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+ui_frames.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+ui_frames.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+ui_frames.o: /usr/include/string.h /usr/include/X11/Core.h
+ui_frames.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+ui_frames.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+ui_frames.o: /usr/include/X11/Shell.h /usr/include/X11/SM/SMlib.h
+ui_frames.o: /usr/include/X11/SM/SM.h /usr/include/X11/ICE/ICElib.h
+ui_frames.o: /usr/include/X11/ICE/ICE.h /usr/include/X11/Xatom.h
+ui_frames.o: /usr/include/X11/extensions/Print.h /usr/include/X11/Xauth.h
+ui_frames.o: /usr/include/X11/Xfuncs.h /usr/include/Xm/XmStrDefs.h
+ui_frames.o: /usr/include/X11/StringDefs.h /usr/include/Xm/XmStrDefs22.h
+ui_frames.o: /usr/include/Xm/VirtKeys.h /usr/include/Xm/Transfer.h
+ui_frames.o: /usr/include/Xm/DragC.h /usr/include/Xm/Display.h
+ui_frames.o: /usr/include/Xm/DropSMgr.h /usr/include/Xm/Primitive.h
+ui_frames.o: /usr/include/Xm/Manager.h /usr/include/Xm/Gadget.h
+ui_frames.o: /usr/include/Xm/TxtPropCv.h /usr/include/Xm/VendorS.h
+ui_frames.o: /usr/include/Xm/XmIm.h /usr/include/Xm/ArrowB.h
+ui_frames.o: /usr/include/Xm/ArrowBG.h /usr/include/Xm/AtomMgr.h
+ui_frames.o: /usr/include/Xm/BulletinB.h /usr/include/Xm/CascadeB.h
+ui_frames.o: /usr/include/Xm/CascadeBG.h /usr/include/Xm/ComboBox.h
+ui_frames.o: /usr/include/Xm/Command.h /usr/include/Xm/Container.h
+ui_frames.o: /usr/include/Xm/CutPaste.h /usr/include/Xm/DialogS.h
+ui_frames.o: /usr/include/Xm/DragDrop.h /usr/include/Xm/DragIcon.h
+ui_frames.o: /usr/include/Xm/DropTrans.h /usr/include/Xm/DragOverS.h
+ui_frames.o: /usr/include/Xm/DrawingA.h /usr/include/Xm/DrawnB.h
+ui_frames.o: /usr/include/Xm/FileSB.h /usr/include/Xm/Form.h
+ui_frames.o: /usr/include/Xm/Frame.h /usr/include/Xm/GrabShell.h
+ui_frames.o: /usr/include/Xm/IconFile.h /usr/include/Xm/IconG.h
+ui_frames.o: /usr/include/Xm/IconH.h /usr/include/Xm/Label.h
+ui_frames.o: /usr/include/Xm/LabelG.h /usr/include/Xm/List.h
+ui_frames.o: /usr/include/Xm/MainW.h /usr/include/Xm/MenuShell.h
+ui_frames.o: /usr/include/Xm/MessageB.h /usr/include/Xm/MwmUtil.h
+ui_frames.o: /usr/include/X11/Xmd.h /usr/include/Xm/Notebook.h
+ui_frames.o: /usr/include/Xm/PanedW.h /usr/include/Xm/Print.h
+ui_frames.o: /usr/include/Xm/Protocols.h /usr/include/Xm/PushB.h
+ui_frames.o: /usr/include/Xm/PushBG.h /usr/include/Xm/RepType.h
+ui_frames.o: /usr/include/Xm/RowColumn.h /usr/include/Xm/SSpinB.h
+ui_frames.o: /usr/include/Xm/Scale.h /usr/include/Xm/Screen.h
+ui_frames.o: /usr/include/Xm/ScrollBar.h /usr/include/Xm/ScrolledW.h
+ui_frames.o: /usr/include/Xm/SelectioB.h /usr/include/Xm/SeparatoG.h
+ui_frames.o: /usr/include/Xm/Separator.h /usr/include/Xm/SpinB.h
+ui_frames.o: /usr/include/Xm/Text.h /usr/include/Xm/TextF.h
+ui_frames.o: /usr/include/Xm/ToggleB.h /usr/include/Xm/ToggleBG.h
+ui_frames.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+ui_frames.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+ui_frames.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+ui_frames.o: /usr/include/X11/Xarch.h /usr/include/GL/gl.h
+ui_frames.o: /usr/include/GL/glext.h /usr/include/GL/glu.h
+ui_frames.o: /usr/include/GL/glx.h /usr/include/GL/glxtokens.h defines.h
+ui_frames.o: structs.h bitmaps.h
+stereo.o: all.h /usr/include/stdio.h /usr/include/features.h
+stereo.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+stereo.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stddef.h
+stereo.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+stereo.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+stereo.o: /usr/include/_G_config.h /usr/include/wchar.h
+stereo.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+stereo.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stdarg.h
+stereo.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+stereo.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+stereo.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+stereo.o: /usr/include/sys/errno.h /usr/include/errno.h
+stereo.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+stereo.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+stereo.o: /usr/include/bits/fcntl.h /usr/include/math.h
+stereo.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+stereo.o: /usr/include/bits/mathcalls.h /usr/include/Xm/XmAll.h
+stereo.o: /usr/include/Xm/Xm.h /usr/include/X11/Intrinsic.h
+stereo.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+stereo.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+stereo.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+stereo.o: /usr/include/string.h /usr/include/X11/Core.h
+stereo.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+stereo.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+stereo.o: /usr/include/X11/Shell.h /usr/include/X11/SM/SMlib.h
+stereo.o: /usr/include/X11/SM/SM.h /usr/include/X11/ICE/ICElib.h
+stereo.o: /usr/include/X11/ICE/ICE.h /usr/include/X11/Xatom.h
+stereo.o: /usr/include/X11/extensions/Print.h /usr/include/X11/Xauth.h
+stereo.o: /usr/include/X11/Xfuncs.h /usr/include/Xm/XmStrDefs.h
+stereo.o: /usr/include/X11/StringDefs.h /usr/include/Xm/XmStrDefs22.h
+stereo.o: /usr/include/Xm/VirtKeys.h /usr/include/Xm/Transfer.h
+stereo.o: /usr/include/Xm/DragC.h /usr/include/Xm/Display.h
+stereo.o: /usr/include/Xm/DropSMgr.h /usr/include/Xm/Primitive.h
+stereo.o: /usr/include/Xm/Manager.h /usr/include/Xm/Gadget.h
+stereo.o: /usr/include/Xm/TxtPropCv.h /usr/include/Xm/VendorS.h
+stereo.o: /usr/include/Xm/XmIm.h /usr/include/Xm/ArrowB.h
+stereo.o: /usr/include/Xm/ArrowBG.h /usr/include/Xm/AtomMgr.h
+stereo.o: /usr/include/Xm/BulletinB.h /usr/include/Xm/CascadeB.h
+stereo.o: /usr/include/Xm/CascadeBG.h /usr/include/Xm/ComboBox.h
+stereo.o: /usr/include/Xm/Command.h /usr/include/Xm/Container.h
+stereo.o: /usr/include/Xm/CutPaste.h /usr/include/Xm/DialogS.h
+stereo.o: /usr/include/Xm/DragDrop.h /usr/include/Xm/DragIcon.h
+stereo.o: /usr/include/Xm/DropTrans.h /usr/include/Xm/DragOverS.h
+stereo.o: /usr/include/Xm/DrawingA.h /usr/include/Xm/DrawnB.h
+stereo.o: /usr/include/Xm/FileSB.h /usr/include/Xm/Form.h
+stereo.o: /usr/include/Xm/Frame.h /usr/include/Xm/GrabShell.h
+stereo.o: /usr/include/Xm/IconFile.h /usr/include/Xm/IconG.h
+stereo.o: /usr/include/Xm/IconH.h /usr/include/Xm/Label.h
+stereo.o: /usr/include/Xm/LabelG.h /usr/include/Xm/List.h
+stereo.o: /usr/include/Xm/MainW.h /usr/include/Xm/MenuShell.h
+stereo.o: /usr/include/Xm/MessageB.h /usr/include/Xm/MwmUtil.h
+stereo.o: /usr/include/X11/Xmd.h /usr/include/Xm/Notebook.h
+stereo.o: /usr/include/Xm/PanedW.h /usr/include/Xm/Print.h
+stereo.o: /usr/include/Xm/Protocols.h /usr/include/Xm/PushB.h
+stereo.o: /usr/include/Xm/PushBG.h /usr/include/Xm/RepType.h
+stereo.o: /usr/include/Xm/RowColumn.h /usr/include/Xm/SSpinB.h
+stereo.o: /usr/include/Xm/Scale.h /usr/include/Xm/Screen.h
+stereo.o: /usr/include/Xm/ScrollBar.h /usr/include/Xm/ScrolledW.h
+stereo.o: /usr/include/Xm/SelectioB.h /usr/include/Xm/SeparatoG.h
+stereo.o: /usr/include/Xm/Separator.h /usr/include/Xm/SpinB.h
+stereo.o: /usr/include/Xm/Text.h /usr/include/Xm/TextF.h
+stereo.o: /usr/include/Xm/ToggleB.h /usr/include/Xm/ToggleBG.h
+stereo.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+stereo.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+stereo.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+stereo.o: /usr/include/sys/time.h /usr/include/bits/time.h
+stereo.o: /usr/include/sys/select.h /usr/include/bits/select.h
+stereo.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+stereo.o: /usr/include/GL/gl.h /usr/include/GL/glext.h /usr/include/GL/glu.h
+stereo.o: /usr/include/GL/glx.h /usr/include/GL/glxtokens.h defines.h
+stereo.o: structs.h
+ui_quatrot.o: all.h /usr/include/stdio.h /usr/include/features.h
+ui_quatrot.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+ui_quatrot.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stddef.h
+ui_quatrot.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+ui_quatrot.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+ui_quatrot.o: /usr/include/_G_config.h /usr/include/wchar.h
+ui_quatrot.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+ui_quatrot.o: /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.5/include/stdarg.h
+ui_quatrot.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+ui_quatrot.o: /usr/include/stdlib.h /usr/include/sys/types.h
+ui_quatrot.o: /usr/include/time.h /usr/include/sys/stat.h
+ui_quatrot.o: /usr/include/bits/stat.h /usr/include/sys/errno.h
+ui_quatrot.o: /usr/include/errno.h /usr/include/bits/errno.h
+ui_quatrot.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+ui_quatrot.o: /usr/include/fcntl.h /usr/include/bits/fcntl.h
+ui_quatrot.o: /usr/include/math.h /usr/include/bits/huge_val.h
+ui_quatrot.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+ui_quatrot.o: /usr/include/Xm/XmAll.h /usr/include/Xm/Xm.h
+ui_quatrot.o: /usr/include/X11/Intrinsic.h /usr/include/X11/Xlib.h
+ui_quatrot.o: /usr/include/X11/X.h /usr/include/X11/Xfuncproto.h
+ui_quatrot.o: /usr/include/X11/Xosdefs.h /usr/include/X11/Xutil.h
+ui_quatrot.o: /usr/include/X11/Xresource.h /usr/include/string.h
+ui_quatrot.o: /usr/include/X11/Core.h /usr/include/X11/Composite.h
+ui_quatrot.o: /usr/include/X11/Constraint.h /usr/include/X11/Object.h
+ui_quatrot.o: /usr/include/X11/RectObj.h /usr/include/X11/Shell.h
+ui_quatrot.o: /usr/include/X11/SM/SMlib.h /usr/include/X11/SM/SM.h
+ui_quatrot.o: /usr/include/X11/ICE/ICElib.h /usr/include/X11/ICE/ICE.h
+ui_quatrot.o: /usr/include/X11/Xatom.h /usr/include/X11/extensions/Print.h
+ui_quatrot.o: /usr/include/X11/Xauth.h /usr/include/X11/Xfuncs.h
+ui_quatrot.o: /usr/include/Xm/XmStrDefs.h /usr/include/X11/StringDefs.h
+ui_quatrot.o: /usr/include/Xm/XmStrDefs22.h /usr/include/Xm/VirtKeys.h
+ui_quatrot.o: /usr/include/Xm/Transfer.h /usr/include/Xm/DragC.h
+ui_quatrot.o: /usr/include/Xm/Display.h /usr/include/Xm/DropSMgr.h
+ui_quatrot.o: /usr/include/Xm/Primitive.h /usr/include/Xm/Manager.h
+ui_quatrot.o: /usr/include/Xm/Gadget.h /usr/include/Xm/TxtPropCv.h
+ui_quatrot.o: /usr/include/Xm/VendorS.h /usr/include/Xm/XmIm.h
+ui_quatrot.o: /usr/include/Xm/ArrowB.h /usr/include/Xm/ArrowBG.h
+ui_quatrot.o: /usr/include/Xm/AtomMgr.h /usr/include/Xm/BulletinB.h
+ui_quatrot.o: /usr/include/Xm/CascadeB.h /usr/include/Xm/CascadeBG.h
+ui_quatrot.o: /usr/include/Xm/ComboBox.h /usr/include/Xm/Command.h
+ui_quatrot.o: /usr/include/Xm/Container.h /usr/include/Xm/CutPaste.h
+ui_quatrot.o: /usr/include/Xm/DialogS.h /usr/include/Xm/DragDrop.h
+ui_quatrot.o: /usr/include/Xm/DragIcon.h /usr/include/Xm/DropTrans.h
+ui_quatrot.o: /usr/include/Xm/DragOverS.h /usr/include/Xm/DrawingA.h
+ui_quatrot.o: /usr/include/Xm/DrawnB.h /usr/include/Xm/FileSB.h
+ui_quatrot.o: /usr/include/Xm/Form.h /usr/include/Xm/Frame.h
+ui_quatrot.o: /usr/include/Xm/GrabShell.h /usr/include/Xm/IconFile.h
+ui_quatrot.o: /usr/include/Xm/IconG.h /usr/include/Xm/IconH.h
+ui_quatrot.o: /usr/include/Xm/Label.h /usr/include/Xm/LabelG.h
+ui_quatrot.o: /usr/include/Xm/List.h /usr/include/Xm/MainW.h
+ui_quatrot.o: /usr/include/Xm/MenuShell.h /usr/include/Xm/MessageB.h
+ui_quatrot.o: /usr/include/Xm/MwmUtil.h /usr/include/X11/Xmd.h
+ui_quatrot.o: /usr/include/Xm/Notebook.h /usr/include/Xm/PanedW.h
+ui_quatrot.o: /usr/include/Xm/Print.h /usr/include/Xm/Protocols.h
+ui_quatrot.o: /usr/include/Xm/PushB.h /usr/include/Xm/PushBG.h
+ui_quatrot.o: /usr/include/Xm/RepType.h /usr/include/Xm/RowColumn.h
+ui_quatrot.o: /usr/include/Xm/SSpinB.h /usr/include/Xm/Scale.h
+ui_quatrot.o: /usr/include/Xm/Screen.h /usr/include/Xm/ScrollBar.h
+ui_quatrot.o: /usr/include/Xm/ScrolledW.h /usr/include/Xm/SelectioB.h
+ui_quatrot.o: /usr/include/Xm/SeparatoG.h /usr/include/Xm/Separator.h
+ui_quatrot.o: /usr/include/Xm/SpinB.h /usr/include/Xm/Text.h
+ui_quatrot.o: /usr/include/Xm/TextF.h /usr/include/Xm/ToggleB.h
+ui_quatrot.o: /usr/include/Xm/ToggleBG.h /usr/include/X11/keysym.h
+ui_quatrot.o: /usr/include/X11/keysymdef.h /usr/include/X11/Xos.h
+ui_quatrot.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
+ui_quatrot.o: /usr/include/bits/confname.h /usr/include/sys/time.h
+ui_quatrot.o: /usr/include/bits/time.h /usr/include/sys/select.h
+ui_quatrot.o: /usr/include/bits/select.h /usr/include/bits/sigset.h
+ui_quatrot.o: /usr/include/X11/Xarch.h /usr/include/GL/gl.h
+ui_quatrot.o: /usr/include/GL/glext.h /usr/include/GL/glu.h
+ui_quatrot.o: /usr/include/GL/glx.h /usr/include/GL/glxtokens.h defines.h
+ui_quatrot.o: structs.h

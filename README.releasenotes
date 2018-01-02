@@ -1,0 +1,214 @@
+Index:
+  Release 1.0 July  1994
+  Release 1.1 July  1998
+  Release 1.2 April 1999
+--------------------------
+
+
+                            MeshView Release 1.0
+                       Department of Computer Science
+	                     Indiana University
+                                July 1994
+
+
+INTRODUCTION
+-------------
+
+This is an initial release of MeshView, an interactive viewing program
+for two-dimensional manifolds embedded in 3D or 4D. It is written in
+OpenGL and X/Motif.  It should be able to run on any workstation that
+supports OpenGL and X/Motif.
+
+
+FEATURES
+--------
+
+-- Reads Geomview/OOGL(developed at the Geometry Center, University of 
+   Minnesota) MESH, OFF and LIST file formats.
+
+-- Rotates/translates/scales objects in 3D and 4D interactively under 
+   mouse control.
+
+-- Applies 3D and 4D rolling ball models to accomplish rotations.
+   (See Technical Reports 319 and 406, Computer Science Department,
+    Indiana University, available by anonymous ftp from
+    ftp.cs.indiana.edu in the directory pub/techreports)
+
+-- Momentum option available on all motions.
+
+-- Optionally draws faces, edges, vertices, normals, palette, 
+   a single lighting vector, and a reference set of 4D axes.
+
+-- Supplies a wide range of color palette options for 4D depth color coding.
+
+-- Supplies an interactive parametric space "picker" (or point locator)
+   for a MESH file or list of MESH files.  Any individual mesh in
+   a set of loaded patches can be selected in turn.
+
+-- Saves system state for later recovery, including current 3D and 4D 
+   viewing matrices, camera setting, background color, light direction 
+   and rendered ppm image of the current scene.  This is useful for
+   reconstructing the state of an illustration for a publication.
+
+-- Loads palettes and saved system states.
+
+-- Uses two different colors (or one color) for front-facing and back-facing 
+   surfaces. This feature is quite useful when rotating in 4D.
+
+-- Supports 3D perspective and orthogonal projections.
+
+-- Supports a choice between applying the 4D rolling ball to the
+   current screen coordinates of the object's 3D projection (context-free,
+   the default), or applying to the object's local 3D coordinate
+   system context (use the "axes" display to help show the context). 
+   The latter is useful for looking at different sides of the object's
+   3D projection while performing a 4D rotation.  This is needed
+   mostly to accommodate a 2D mouse interface, and would not be
+   as useful for a 3D mouse interface.
+
+-- Includes a selection of example geometry files, including 4D flat torus, 
+   Steiner surface (RP2 embedded in 4D), 4D Fermat surfaces and a lot more. 
+   (see README file in the data directory for details)
+
+-- Supplies online help.
+
+
+PLANNED FEATURES FOR FUTURE RELEASES
+------------------------------------
+
+-- 4D perspective projections.
+
+-- 3D/4D geodesic generator.
+
+-- 3D/4D manifold walker.
+
+-- Static and dynamically recalculated 4D occlusion markings on 
+   surfaces projected to 3D, like knot crossings of 3D knotted
+   curves projected to 2D.
+
+-- Automatic manifold patch sewing to support complicated ad hoc topologies.
+
+-- Cutting using primitives like plane/sphere/cylinder/... in 3D/4D.
+
+-- Nice image generator for publications. 
+   Antialiasing, large-than-buffer size, transparency, stereo pairs.
+
+-- Support 3-manifolds embedded in 4D/5D, volume rendering of
+   simple tessellations.
+
+-- Animation from files, parametric coordinate transformations, 
+   3D and 4D orientation key frames, topological key frames, etc.
+
+-- Scheme-like extensible user language interface, for external modules,
+   animation scripts, and so on.
+
+
+SOME OF OUR DESIGN GOALS
+------------------------
+
+-- Fast. Use display lists in OpenGL. Enhance the Geomview/OOGL MESH 
+   and OFF file formats.  User can specify color per object or
+   color per vertex.
+
+-- Small. Keep as simple and independent as possible.
+
+-- Portable. Use OpenGL and X/Motif.
+
+-- Freely distributable. 
+
+-- Nice hardcopy generator and easily saveable state for later 
+   refinement of a view.
+
+
+======================================================================
+
+
+                            MeshView Release 1.1
+                       Department of Computer Science
+	                     Indiana University
+                                July 1998
+
+
+Added:
+
+- key frames animation (interpolates vertex and texture coordinates).
+  Help for controls is available in Key Frames dialog and in doc directory
+  in HTML format.
+
+- screen door transparency (negative and positive).
+
+- texture support
+
+- SGI stereo support. (World eye distance is kept the same when resizing
+  window, everything else is relative to the radius of unit sphere).
+
+- new object formats (DOT and LINE). Documentation for all supported 
+  formats is available in README.formats and in doc directory (HTML).
+
+Changed:
+
+- picker drawing area was rewritten in Xlib, which eliminates frequent 
+  switching of GL context. 
+
+- glOffsetMode is enabled for drawing faces. Allows nice drawing of edges.
+  GL_POLYGON_OFFSET_FILL had to be used for faces, as GL_POLYGON_OFFSET_LINE
+  is not implemented on XS, XZ, Elan, and Extreme, 
+  RealityEngine, RealityEngine2, and VTX and InfiniteReality systems. 
+
+- menu shortcuts were reassigned. Help is available in Meshview and
+  doc directory in HTML format.
+
+- moved from FOV to Focal distance. Center of the unit sphere is kept in
+  the focal plane. (Allows for the object's image to be the same size for 
+  different focal distances and for orthogonal projection). Near is always
+  kept smaller than far. When changing focal distance, near and far are
+  kept on the unit distance from the focal plane. (Keeps objects visible).
+
+- picker cube and vertex cube display lists were separated. Allows
+  to change the size for one of them independently from the other.
+
+Misc:
+
+- added possibility to load data without discarding old objects.
+
+- load.c and draw.c files rewritten to make them more modular, several
+  bugs were fixed.
+
+- OpenGL drawing mode was changed from GL_TRIANGLES to GL_POLYGON for
+  OFF object. Eliminated the manual splitting of faces into triangles,
+  which allowed right implementation of the screen door transparency.
+
+- scaling for object 4D coordinates was removed. Now object are scaled
+  only in 3D. (4D coordinates are intact).
+
+- shininess limits were adjusted to the range specified by OpenGL (1..128)
+
+
+======================================================================
+                            MeshView Release 1.2
+                       Department of Computer Science
+	                     Indiana University
+                                March 1999
+
+
+Changes in this version:
+
+- path list added to most of file dialogs
+
+- unit sphere added to Render->Draw menu
+
+- sliders for unit sphere size and number of rows were added to
+  Panels->Settings menu
+
+- 3D mouse menu was added to Modes menu
+  it allows to choose a serial port and toggle 3D mouse (F3 also works)
+
+- code for 3D mouse was cleaned up
+
+- slider for 'time to wait at endpoints' was added to Key frames dialog
+
+- interpolation based on time was added to key frames (another slider
+    and couple of buttons to choose between interpolation types)
+
+- LINE data type format was extended to accept LINE_STRIP and
+    LINE_LOOP

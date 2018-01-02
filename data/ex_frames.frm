@@ -1,0 +1,12 @@
+FRAMES
+10
+ex_frames/fr1.off
+ex_frames/fr2.off
+ex_frames/fr3.off
+ex_frames/fr4.off
+ex_frames/fr5.off
+ex_frames/fr6.off
+ex_frames/fr7.off
+ex_frames/fr8.off
+ex_frames/fr9.off
+ex_frames/fr10.off

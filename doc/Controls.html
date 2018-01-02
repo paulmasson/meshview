@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>Meshview 1.2 Mouse/keyboard controls</TITLE>
+   <META NAME="GENERATOR" CONTENT="Mozilla/3.01SGoldC-SGI (X11; I; IRIX64 6.4 IP30) [Netscape]">
+   <META NAME="Author" CONTENT="Konstantine I Ishkov">
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#FF0000">
+
+<H5>Meshview 1.2</H5>
+
+<H1 ALIGN=CENTER><A NAME="MOUSE/KEYBOARD CONTROLS"></A><A HREF="TOC.html#MOUSE/KEYBOARD CONTROLS">MOUSE/KEYBOARD
+CONTROLS</A> </H1>
+
+<P><B>Note: Below, (u,v) denotes the right-handed Cartesian coordinates
+of the mouse.</B></P>
+
+<H4><A NAME="3D viewing controls"></A><A HREF="TOC.html#3D viewing controls">3D
+viewing controls:</A></H4>
+
+<UL>
+<LI>leftbutton : 3D rotation (3D rolling ball) R3(u,v) </LI>
+
+<LI>middlebutton : 3D translation in x-y plane T3(u,v,0) </LI>
+
+<LI>rightbutton : 3D translation along z axis T3(0,0,-v) </LI>
+
+<LI>Shift+right : 3D rotation around z axis R2(u) </LI>
+</UL>
+
+<H4><A NAME="3D lighting controls"></A><A HREF="TOC.html#3D lighting controls">3D
+lighting controls:</A> (you can see the light ray by Ctrl+l) </H4>
+
+<UL>
+<LI><B>Ctrl+left</B> : 3D rotation (3D rolling ball) R3(u,v) </LI>
+
+<LI><B>Ctrl+middle</B> : 3D rotation around z axis R2(u) </LI>
+</UL>
+
+<H4><A NAME="4D controls"></A><A HREF="TOC.html#4D controls">4D controls:
+</A></H4>
+
+<UL>
+<LI><B>Shift+left </B>: xyw rotation (4D rolling ball) R4(u,v,0)</LI>
+
+<LI><B>Shift+middle </B>: xzw rotation (4D rolling ball) R4(u,0,-v) </LI>
+</UL>
+
+<H4><A NAME="Keyboard controls"></A><A HREF="TOC.html#Keyboard controls">Keyboard
+controls: </A></H4>
+
+<UL>
+<LI><B>r </B>: (Reset) It resets 4D and 3D matrices and 3D light direction,
+and it stops momentum. </LI>
+
+<LI><B>c</B> : (Center) It resets 3D rotation and translation matrices,
+and it stops momentum. </LI>
+
+<LI><B>s</B> : (Stop) It Stops momentum. </LI>
+</UL>
+
+<H4><A NAME="Keyboard shortcuts"></A><A HREF="TOC.html#Keyboard shortcuts">Keyboard
+shortcuts for menu items: </A></H4>
+
+<UL>
+<LI><B>Ctrl+d </B>: load data (old data discarded) </LI>
+
+<LI><B>Ctrl+a</B> : add data Ctrl+t : load texture </LI>
+
+<LI><B>Ctrl+l </B>: load palette Ctrl+e : load setting </LI>
+
+<LI><B>Ctrl+f</B> : save setting </LI>
+
+<LI><B>Ctrl+i</B> : save as ppm </LI>
+
+<LI><B>Esc</B> : quit <BR>
+</LI>
+
+<LI><B>f </B>: toggle drawing of faces (default on) </LI>
+
+<LI><B>e </B>: toggle drawing of edges (default off) </LI>
+
+<LI><B>v </B>: toggle drawing of vertices (default off) </LI>
+
+<LI><B>n </B>: toggle drawing of normals (default off) </LI>
+
+<LI><B>p </B>: toggle drawing of palette (default off) </LI>
+
+<LI><B>l</B> : toggle drawing of light (default off) </LI>
+
+<LI><B>a</B> : toggle drawing of axes (default off) <BR>
+</LI>
+
+<LI><B>1</B> : draw two sides of face use same color (default) </LI>
+
+<LI><B>2</B> : draw two sides of face use different colors </LI>
+
+<LI><B>3</B> : 4D depth color coding </LI>
+
+<LI><B>4</B> : use texture <BR>
+</LI>
+
+<LI><B>5</B> : screen_door off </LI>
+
+<LI><B>6</B> : screen door positive </LI>
+
+<LI><B>7</B> : screen door negative <BR>
+</LI>
+
+<LI><B>Ctrl+g</B>: smooth shading (default) </LI>
+
+<LI><B>Ctrl+h</B>: flat shading <BR>
+</LI>
+
+<LI><B>Ctrl+p</B> : 3D perspective projection (default) </LI>
+
+<LI><B>Ctrl+o</B> : 3D orthogonal projection <BR>
+</LI>
+
+<LI><B>w</B> : 4D projection along w-axis (default) </LI>
+
+<LI><B>x </B>: 4D projection along x-axis (rotating the objects in x-w
+plane by 90 degrees before apply other 4D rotations) </LI>
+
+<LI><B>y</B> : 4D-projection along y-axis (rotating the objects in y-w
+plane by 90 degrees before apply other 4D rotations) </LI>
+
+<LI><B>z</B> : 4D-projection along z-axis (rotating the objects in z-w
+plane by 90 degrees before apply other 4D rotations) <BR>
+</LI>
+
+<LI><B>Shift+o</B> : 4D orthogonal projection (default) </LI>
+
+<LI><B>Shift+p</B> : 4D polar projection (use 'polar distance' scale on
+'setting panel' to adjust the parameter) <BR>
+</LI>
+
+<LI><B>Ctrl+m</B> : toggle momentum (default on) </LI>
+
+<LI><B>Ctrl+q</B> : toggle context-free (default on) </LI>
+
+<LI><B>Ctrl+s</B> : toggle stereo mode (default off) <BR>
+</LI>
+
+<LI><B>Shift+v</B> : pop up view setting panel </LI>
+
+<LI><B>Shift+s</B> : pop up setting panel </LI>
+
+<LI><B>Shift+k</B> : pop up picker panel </LI>
+
+<LI><B>Shift+f</B> : pop up key frame panel </LI>
+</UL>
+
+<P>
+<HR WIDTH="100%"></P>
+
+<P>Comments to: <A HREF="mailto:kishkov@cs.indiana.edu">kishkov@cs.indana.edu<BR>
+</A>Created: Jul 21 1998 .</P>
+
+</BODY>
+</HTML>

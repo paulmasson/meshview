@@ -1,0 +1,49 @@
+#
+# Files
+#
+
+# Changes for Linux/Mesa:
+# "all.h" includes GLwMDrawA.h.  But the corresponding
+# lib file libMesaGLw.a is not linked into the excutable.
+# Must therefore add  -lMesaGlw into the Makefile.
+
+TARGET = meshview
+SRCS = mouse3d.c sgidrvr.c action.c callback.c draw.c geom.c init.c load.c \
+       main.c reset.c save.c transform.c ui.c ui_init.c ui_picker.c \
+       ui_setting.c ui_frames.c stereo.c ui_quatrot.c
+
+#
+# Compilation options
+#
+
+CC 	= gcc
+CFLAGS	= -O2 -I/usr/X11R6/include -DNO_STEREO # -g3
+LDFLAGS	= -L/usr/X11R6/lib
+# LIBS	= -lGLw -lXm -lXt -lX11 -lXext -lMesaGLU -lMesaGL -lm
+LIBS = -lGLw -lMesaGLw -lMesaGLwM -lXm -lXt -lX11 -lXext -lMesaGLU -lMesaGL -lm
+
+RM = /usr/bin/rm -rf
+
+OBJS = ${SRCS:.c=.o}
+
+#
+# Rules
+#
+
+
+default: depend $(TARGET) 
+	cp meshview ../bin/meshview.linux
+
+$(TARGET): ${OBJS} 
+	    ${CC} ${CFLAGS} ${LDFLAGS} -o $@ ${OBJS} ${LIBS}
+
+clean: clobber
+	-$(RM) $(OBJS) $(TARGET)
+
+clobber:
+	-$(RM) *~  *.bak #*
+
+depend:
+	makedepend -f Makefile $(SRCS)
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.

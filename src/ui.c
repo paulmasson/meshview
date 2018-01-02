@@ -1,0 +1,1039 @@
+/* build all Motif widgets and widget callbacks ( except action/translation
+   callbacks, they are in action.c) */
+
+#define UI_C
+#include "all.h"
+
+Widget fileBoxData, fileBoxSetting, fileBoxPalette, fileBoxPpm, fileBoxTexture;
+Widget mouse3dDialod;
+
+static String translations =
+     "~Ctrl Shift<Btn1Motion>  : motion(ShiftMotion) \n"
+     "~Ctrl Shift<Btn2Motion>  : motion(ShiftMotion) \n"
+     "~Ctrl Shift<Btn3Motion>  : motion(ShiftMotion) \n"
+     "~Shift Ctrl<Btn1Motion>  : motion(CtrlMotion)  \n"
+     "~Shift Ctrl<Btn2Motion>  : motion(CtrlMotion)  \n"
+     "~Shift ~Ctrl<Btn1Motion> : motion(Motion)      \n"
+     "~Shift ~Ctrl<Btn2Motion> : motion(Motion)      \n"
+     "~Shift ~Ctrl<Btn3Motion> : motion(Motion)      \n"
+     "<Btn1Down>        : motion(Down)        \n"
+     "<Btn2Down>        : motion(Down)        \n"
+     "<Btn3Down>        : motion(Down)        \n"
+     "<Btn1Up>          : motion(Up)          \n"
+     "<Btn2Up>          : motion(Up)          \n"
+     "<Btn3Up>          : motion(Up)          \n"
+     "<Key>R            : reset()             \n"
+     "<Key>C            : center()            \n"
+     "<Key>S            : stop()";
+
+static XtActionsRec actions[] = {
+  { "motion", (XtActionProc) motion },
+  { "reset", (XtActionProc) reset },
+  { "center", (XtActionProc) center },
+  { "stop", (XtActionProc) stop },
+};
+
+char *dftmouse3dport= "/dev/ttyd2";
+char *mouse3dport;
+
+/* ARGSUSED */
+void change3dmouseport(Widget w, XtPointer client_data, XtPointer call_data)
+{  
+  XmSelectionBoxCallbackStruct *cbs =
+    (XmSelectionBoxCallbackStruct *) call_data;
+
+  if(cbs->reason == XmCR_OK) {
+
+    if(mouse3dport != dftmouse3dport) XtFree(mouse3dport);
+    XmStringGetLtoR(cbs->value, XmSTRING_DEFAULT_CHARSET, &mouse3dport);
+
+  } else if(cbs->reason == XmCR_HELP) {
+    
+    XtVaSetValues(w, XtVaTypedArg, 
+		  XmNtextString, XmRString, 
+		  dftmouse3dport, sizeof(dftmouse3dport),
+		  NULL);
+    if(mouse3dport != dftmouse3dport) XtFree(mouse3dport);
+    mouse3dport = dftmouse3dport;
+  }
+}
+
+
+/* ARGSUSED */
+void toggle3dmouse(Widget w, XtPointer client_data, XtPointer call_data)
+{
+  char reason[80];
+  XmToggleButtonCallbackStruct *cbs =
+    (XmToggleButtonCallbackStruct *) call_data;
+
+  if(cbs->set == True) {
+
+    mouse3d_flag = ON;
+    mouse3d_reset_flag = ON;
+    if(mouse3d_open(mouse3dport, reason) == -1) {
+      mouse3d_flag = OFF;
+      XtVaSetValues(w, XmNset, False, NULL);
+      XtVaSetValues(errorBox, XtVaTypedArg, XmNmessageString, 
+		    XmRString, reason, strlen(reason), 
+		    NULL);
+      XtManageChild(errorBox);
+    }
+
+  } else {
+    mouse3d_flag = OFF;
+    mouse3d_close();
+  }
+}
+
+/*ARGSUSED*/
+void changePath(Widget w, XtPointer client_data, XtPointer call_data) 
+{
+  Widget child, fbox = (Widget) client_data;
+  XmListCallbackStruct *cbs = (XmListCallbackStruct *) call_data;
+
+  if(cbs->reason == XmCR_BROWSE_SELECT) {
+    XtVaSetValues(fbox, XmNdirectory, cbs->item, NULL);    
+  }
+}
+
+/*ARGSUSED*/
+void Loadsave(Widget w, XtPointer client_data, XtPointer call_data) 
+{
+  char *filename;
+  struct stat buf;
+  int flag = (int) client_data;
+
+  XmFileSelectionBoxCallbackStruct *cbs 
+      = (XmFileSelectionBoxCallbackStruct *) call_data;
+  
+  if(!XmStringGetLtoR(cbs->value, XmSTRING_DEFAULT_CHARSET, &filename))
+    return; /* must have been an internal error */
+  if(!*filename) { /* nothing typed? */
+    XtFree(filename); /* even "" is an allocated byte */
+    return;
+  }
+
+  /* return if filename is a directory */
+  stat(filename, &buf);
+  if(S_ISDIR(buf.st_mode)){
+    printf("%s is a directory\n", filename);
+    /* stat man page:
+      use S_ISDIR(buf.st_mode) rather than (buf.st_mode&S_IFDIR) */
+    XtFree(filename);
+    return;
+  }
+  
+  switch(flag)
+    {
+    case LOAD_NEW_DATA:
+      load_data(filename, NEW);
+      XtUnmanageChild(fileBoxData);
+      break;
+    case LOAD_DATA:
+      load_data(filename, ADD);
+      XtUnmanageChild(fileBoxData);
+      break;
+    case LOAD_SETTING:
+      load_settings(filename);
+      XtUnmanageChild(fileBoxSetting);
+      break;
+    case LOAD_PALETTE:
+      load_pallete(filename);
+      XtUnmanageChild(fileBoxPalette);
+      break;
+    case LOAD_TEXTURE:
+      load_texture(filename);
+      XtUnmanageChild(fileBoxTexture);
+      break;
+    case SAVE_SETTING:
+      save_settings(filename);
+      XtUnmanageChild(fileBoxSetting);
+      break;
+    case SAVE_PPM:
+      save_ppm(filename);
+      XtUnmanageChild(fileBoxPpm);
+      break;
+    }
+  XtFree(filename);
+}
+
+/*ARGSUSED*/
+void ShowDialog(Widget w, XtPointer client_data, XtPointer call_data) 
+{
+  int k;
+  int flag = (int) client_data;
+
+  switch(flag) {
+
+  case LOAD_DATA:
+    if(XtIsManaged(fileBoxData))
+      XtUnmanageChild(fileBoxData);
+    XtRemoveAllCallbacks(fileBoxData, XmNokCallback);
+    XtAddCallback(fileBoxData, XmNokCallback, Loadsave, (XtPointer) LOAD_DATA);
+    XtManageChild(fileBoxData);
+    break;
+
+  case LOAD_NEW_DATA:
+    if(XtIsManaged(fileBoxData))
+      XtUnmanageChild(fileBoxData);
+    XtRemoveAllCallbacks(fileBoxData, XmNokCallback);
+    XtAddCallback(fileBoxData, XmNokCallback, Loadsave, 
+		  (XtPointer) LOAD_NEW_DATA);
+    XtManageChild(fileBoxData);
+    break;
+
+  case LOAD_SETTING:
+    if(XtIsManaged(fileBoxSetting))
+      XtUnmanageChild(fileBoxSetting);
+    XtVaSetValues(fileBoxSetting, 
+		  XtVaTypedArg, XmNselectionLabelString, 
+		  XmRString, "Loading setting...", 19,
+		  NULL);
+    XtRemoveAllCallbacks(fileBoxSetting, XmNokCallback);
+    XtAddCallback(fileBoxSetting, XmNokCallback, Loadsave, (XtPointer) flag);
+    XtManageChild(fileBoxSetting);
+    break;
+
+  case SAVE_SETTING:
+    if(XtIsManaged(fileBoxSetting))
+      XtUnmanageChild(fileBoxSetting);
+    XtVaSetValues(fileBoxSetting, 
+		  XtVaTypedArg, XmNselectionLabelString, 
+		  XmRString, "Saving setting...", 18,
+		  NULL);
+    XtRemoveAllCallbacks(fileBoxSetting, XmNokCallback);
+    XtAddCallback(fileBoxSetting, XmNokCallback, Loadsave, (XtPointer) flag);
+    XtManageChild(fileBoxSetting);
+    break;
+
+  case LOAD_PALETTE:
+    if(XtIsManaged(fileBoxPalette))
+      XtUnmanageChild(fileBoxPalette);
+    XtManageChild(fileBoxPalette);
+    break;
+
+  case LOAD_TEXTURE:
+    if(XtIsManaged(fileBoxTexture))
+      XtUnmanageChild(fileBoxTexture);
+    XtManageChild(fileBoxTexture);
+    break;
+
+  case SAVE_PPM:
+    if(XtIsManaged(fileBoxPpm))
+      XtUnmanageChild(fileBoxPpm);
+    XtManageChild(fileBoxPpm);
+    break;
+
+  case MOUSE3D_DIALOG:
+    if(XtIsManaged(mouse3dDialod))
+      XtUnmanageChild(mouse3dDialod);
+    XtManageChild(mouse3dDialod);
+    break;
+
+  case SETTING1_DIALOG:
+    if(XtIsManaged(setting1Dialog))
+      XtUnmanageChild(setting1Dialog);
+    XtManageChild(setting1Dialog);
+    break;
+
+  case SETTING2_DIALOG:
+    if(XtIsManaged(setting2Dialog))
+      XtUnmanageChild(setting2Dialog);
+    XtManageChild(setting2Dialog);
+    break;
+
+  case PICKER_DIALOG:
+    if(picker_flag == ON) {
+      if(XtIsManaged(pickerDialog))
+	XtUnmanageChild(pickerDialog);
+      XtManageChild(pickerDialog);
+    } else {
+      
+      if(nobjs == 0) {
+	XtVaSetValues(errorBox, XtVaTypedArg, XmNmessageString, XmRString, 
+		      "Please load a file first", 25, 
+		      NULL);
+	XtManageChild(errorBox);
+	return;
+      }
+
+      for(k=0; k<nobjs; k++) {
+	if(olist[k]->gformat != MESH) {
+	  XtVaSetValues(errorBox, XtVaTypedArg, 
+			XmNmessageString, XmRString, 
+			"Sorry, not all objects are of MESH format", 45, 
+			NULL);
+	  XtManageChild(errorBox);
+	  return;
+	}
+      }
+      picker_flag = ON;
+      create_cube_dlist(0.03*cubesize, PICKER_CUBE);
+      /* leave space for objNumScale on picker */
+      if(!XtIsManaged(objNumScale)) {
+	XtManageChild(objNumScale);
+	XtManageChild(pickerDialog);
+	XtUnmanageChild(objNumScale);
+      } else {
+	XtManageChild(pickerDialog);
+      }
+      setPicker();
+      draw_all();
+    }
+    break;
+
+  case QUATROT_DIALOG:
+    if(XtIsManaged(quatrotDialog))
+      XtUnmanageChild(quatrotDialog);
+    XtManageChild(quatrotDialog);
+    break;
+
+  case FRAMES_DIALOG:
+    if(XtIsManaged(framesDialog))
+      XtUnmanageChild(framesDialog);
+    if(frames_mode == ON) {
+      XtManageChild(framesDialog);
+    } else {
+      XtVaSetValues(errorBox, XtVaTypedArg, 
+		    XmNmessageString, XmRString, 
+		    "Please load key frames first.", 45, 
+		    NULL);
+      XtManageChild(errorBox);
+    }
+    break;
+
+  case HELP_DIALOG:
+    if(XtIsManaged(helpBox))
+      XtUnmanageChild(helpBox);
+    XtManageChild(helpBox);
+    break;
+
+  case ABOUT_DIALOG:
+    if(XtIsManaged(aboutBox))
+      XtUnmanageChild(aboutBox);
+    XtManageChild(aboutBox);
+    break;
+  }
+}
+
+/*ARGSUSED*/
+void ShowBox(Widget w, XtPointer client_data, XtPointer call_data)
+{
+  Widget dialog = (Widget) client_data;
+  XtManageChild(dialog);
+}
+
+/*ARGSUSED*/
+void CloseIt(Widget w, XtPointer client_data, XtPointer call_data)
+{
+  XtUnmanageChild(w);
+}
+
+/*ARGSUSED*/
+void Quit(Widget w, XtPointer client_data, XtPointer call_data)
+{
+  exit(0); 
+}
+
+/*ARGSUSED*/
+void ChangeDrawMode(Widget w, XtPointer client_data, XtPointer call_data)
+{
+  int draw_mode = (int) client_data;
+
+  switch(draw_mode) {
+  case FACE:
+    draw_face_flag = flip(draw_face_flag);
+    break;
+  case EDGE:
+    draw_edge_flag = flip(draw_edge_flag);
+    break;
+  case VERTEX:
+    draw_vertex_flag = flip(draw_vertex_flag);
+    create_cube_dlist(0.03*vcubesize, VERTEX_CUBE);
+    break;
+  case NORMAL:
+    draw_normal_flag = flip(draw_normal_flag);
+    break;
+  case UNIT_SPHERE:
+    draw_unitsph_flag = flip(draw_unitsph_flag);
+    break;
+  case PALETTE:
+    draw_palette_flag = flip(draw_palette_flag);
+    break;
+  case LIGHTING:
+    draw_lighting_flag = flip(draw_lighting_flag);
+    break;
+  case AXIS:
+    draw_axis_flag = flip(draw_axis_flag);
+    break;
+  }
+  redraw_flag = ON;
+  draw_all();
+}
+
+/*ARGSUSED*/
+void ChangeColorMode(Widget w, XtPointer client_data, XtPointer call_data)
+{
+  draw_color_mode = (int) client_data;
+  redraw_flag = ON;
+  draw_all();
+}
+
+/* ARGSUSED */
+void ChangeShadeMode(Widget w, XtPointer client_data, XtPointer call_data)
+{
+  draw_shade_mode = (GLbitfield) client_data;
+  draw_all();
+}
+
+void ChangeScrDoorMode(Widget w, XtPointer client_data, XtPointer call_data)
+{
+  scr_door_mode = (int) client_data;
+  redraw_flag = ON;
+  draw_all();
+}
+/*ARGSUSED*/
+void ChangeMomentumMode(Widget w, XtPointer client_data, XtPointer call_data)
+{
+  momentum_mode = flip(momentum_mode);
+}
+
+/*ARGSUSED*/
+void ChangeContextMode(Widget w, XtPointer client_data, XtPointer call_data)
+{
+  contextf_flag = flip(contextf_flag);
+}
+
+#ifndef NO_STEREO
+
+/*ARGSUSED*/
+void ChangeVideoMode(Widget w, XtPointer client_data, XtPointer call_data)
+{
+  stereo_mode = flip(stereo_mode);
+  if(stereo_mode == TRUE) {
+    start_stereo();
+  } else {
+    stop_stereo();
+    glViewport(0, 0, glw_width, glw_height);
+    myLoadProjection();
+  }
+  draw_all();
+}
+
+#endif /* NO_STEREO */
+
+/*ARGSUSED*/
+void ChangeSizeMode(Widget w, XtPointer client_data, XtPointer call_data)
+{
+  adjust_size_mode = flip(adjust_size_mode);
+  Reset();
+  redraw_flag = ON;
+  draw_all();
+}
+
+/*ARGSUSED*/
+void ChangeProj3Mode(Widget w, XtPointer client_data, XtPointer call_data) 
+{
+  proj3_mode = (int) client_data;
+
+  myLoadProjection();
+  glMatrixMode(GL_MODELVIEW);
+  draw_all();
+}
+
+/*ARGSUSED*/
+void ChangeProj4Mode(Widget w, XtPointer client_data, XtPointer call_data) 
+{
+  int mode = (int) client_data;
+  if(mode != proj4_mode) {
+    proj4_mode = mode;
+    switch(proj4_mode) {
+    case X:
+      mat4.d[0] = 0.0; mat4.d[4] = 0.0; mat4.d[8] = 0.0; mat4.d[12] = -1.0; 
+      mat4.d[1] = 0.0; mat4.d[5] = 1.0; mat4.d[9] = 0.0; mat4.d[13] = 0.0; 
+      mat4.d[2] = 0.0; mat4.d[6] = 0.0; mat4.d[10] = 1.0; mat4.d[14] = 0.0; 
+      mat4.d[3] = 1.0; mat4.d[7] = 0.0; mat4.d[11] = 0.0; mat4.d[15] = 0.0; 
+      break;
+    case Y:
+      mat4.d[0] = 1.0; mat4.d[4] = 0.0; mat4.d[8] = 0.0; mat4.d[12] = 0.0; 
+      mat4.d[1] = 0.0; mat4.d[5] = 0.0; mat4.d[9] = 0.0; mat4.d[13] = -1.0; 
+      mat4.d[2] = 0.0; mat4.d[6] = 0.0; mat4.d[10] = 1.0; mat4.d[14] = 0.0; 
+      mat4.d[3] = 0.0; mat4.d[7] = 1.0; mat4.d[11] = 0.0; mat4.d[15] = 0.0; 
+      break;
+    case Z:
+      mat4.d[0] = 1.0; mat4.d[4] = 0.0; mat4.d[8] = 0.0; mat4.d[12] = 0.0; 
+      mat4.d[1] = 0.0; mat4.d[5] = 1.0; mat4.d[9] = 0.0; mat4.d[13] = 0.0; 
+      mat4.d[2] = 0.0; mat4.d[6] = 0.0; mat4.d[10] = 0.0; mat4.d[14] = -1.0; 
+      mat4.d[3] = 0.0; mat4.d[7] = 0.0; mat4.d[11] = 1.0; mat4.d[15] = 0.0; 
+      break;
+    case W:
+      mat4 = IMat4;
+      break;
+    }
+    From4DTo3D();
+    if(picker_flag == ON) setPicker();
+    AutoSmooth();
+    redraw_flag = ON;
+    draw_all();
+  }
+}
+
+/*ARGSUSED*/
+void ChangeProj4TypeMode(Widget w, XtPointer client_data, XtPointer call_data)
+{
+  int type = (int) client_data;
+  if(type != proj4_type) {
+    proj4_type = type;
+    From4DTo3D();
+    if(picker_flag == ON) setPicker();
+    AutoSmooth();
+    redraw_flag = ON;
+    draw_all();
+  }
+}
+
+MenuItem load_menu[] = {
+    { "Data", &xmPushButtonGadgetClass, 'D', "Ctrl<Key>D", "(^d)",
+        ShowDialog, (XtPointer) LOAD_NEW_DATA, NULL },
+    { "Add data", &xmPushButtonGadgetClass, 'A', "Ctrl<Key>A", "(^a)",
+        ShowDialog, (XtPointer) LOAD_DATA, NULL },
+    { "Texture", &xmPushButtonGadgetClass, 'T',  "Ctrl<Key>T", "(^t)",
+        ShowDialog, (XtPointer) LOAD_TEXTURE, NULL },
+    { "Palette", &xmPushButtonGadgetClass, 'P', "Ctrl<Key>L", "(^l)",
+        ShowDialog, (XtPointer) LOAD_PALETTE, NULL },
+    { "Setting", &xmPushButtonGadgetClass, 'S', "Ctrl<Key>E", "(^e)",
+        ShowDialog, (XtPointer) LOAD_SETTING, NULL },
+    NULL,
+};
+
+MenuItem save__menu[] = {
+    { "Setting", &xmPushButtonGadgetClass, 'S', "Ctrl<Key>F", "(^f)",
+        ShowDialog, (XtPointer) SAVE_SETTING, NULL },
+    { "Image as PPM", &xmPushButtonGadgetClass, 'I', "Ctrl<Key>I", "(^i)",
+        ShowDialog, (XtPointer) SAVE_PPM, (MenuItem *) NULL },
+    NULL,
+};
+
+MenuItem file_menus[] = {
+    { "Load", &xmCascadeButtonGadgetClass, 'L', NULL, NULL,
+        0, 0, load_menu },
+    { "Save", &xmCascadeButtonGadgetClass, 'S', NULL, NULL,
+        0, 0, save__menu },
+    { "Quit", &xmPushButtonGadgetClass, 'Q', "<Key>Escape", "(Esc)",
+        Quit, 0, NULL },
+    NULL,
+};
+
+MenuItem draw_menu[] = {
+    { "Face", &xmToggleButtonGadgetClass, 'F', "<Key>F", "(f)",
+        ChangeDrawMode, (XtPointer) FACE, NULL },
+    { "Edge", &xmToggleButtonGadgetClass, 'E', "<Key>E", "(e)",
+        ChangeDrawMode, (XtPointer) EDGE, NULL },
+    { "Vertex", &xmToggleButtonGadgetClass, 'V', "<Key>V", "(v)",
+        ChangeDrawMode, (XtPointer) VERTEX, NULL },
+    { "Normal", &xmToggleButtonGadgetClass, 'N', "<Key>N", "(n)",
+        ChangeDrawMode, (XtPointer) NORMAL, NULL },
+    { "Unit sphere", &xmToggleButtonGadgetClass, 'U', "<Key>u", "(u)",
+        ChangeDrawMode, (XtPointer) UNIT_SPHERE, NULL },
+    { "Palette", &xmToggleButtonGadgetClass, 'P', "<Key>p", "(p)",
+        ChangeDrawMode, (XtPointer) PALETTE, NULL },
+    { "Lighting", &xmToggleButtonGadgetClass, 'L', "<Key>L", "(l)",
+        ChangeDrawMode, (XtPointer) LIGHTING, NULL },
+    { "Axis", &xmToggleButtonGadgetClass, 'A', "<Key>A", "(a)",
+        ChangeDrawMode, (XtPointer) AXIS, NULL },
+    NULL,
+};
+
+MenuItem color_menu[] = {
+  { "Same color on both sides", &xmPushButtonGadgetClass, 'S', "<Key>1", "(1)",
+    ChangeColorMode, (XtPointer) SAME, NULL },
+  { "Different colors on each side", &xmPushButtonGadgetClass, 'D', 
+    "<Key>2", "(2)", ChangeColorMode, (XtPointer) DIFF, NULL },
+  { "4D depth color-coding", &xmPushButtonGadgetClass, '4', "<Key>3", "(3)",
+    ChangeColorMode, (XtPointer) DEPTH, NULL },
+  { "Texture", &xmPushButtonGadgetClass, 'T', "<Key>4", "(4)", 
+    ChangeColorMode, (XtPointer) TEXTURE, NULL },
+  NULL,
+};
+
+MenuItem scr_door_menu[] = {
+  { "Off", &xmPushButtonGadgetClass, 'O',  "<Key>5", "(5)",
+    ChangeScrDoorMode, (XtPointer) SD_OFF, NULL },
+  { "Positive", &xmPushButtonGadgetClass, 'P',  "<Key>6", "(6)",
+    ChangeScrDoorMode, (XtPointer) SD_PLUS, NULL },
+  { "Negative", &xmPushButtonGadgetClass, 'N',  "<Key>7", "(7)",
+    ChangeScrDoorMode, (XtPointer) SD_MINUS, NULL },
+  NULL,
+};
+
+MenuItem shade_menu[] = {
+    { "Smooth", &xmPushButtonGadgetClass, 'S', "Ctrl<Key>G", "(^g)",
+	ChangeShadeMode, (XtPointer) GL_SMOOTH, NULL },
+    { "Flat", &xmPushButtonGadgetClass, 'F', "Ctrl<Key>H", "(^h)",
+	ChangeShadeMode, (XtPointer) GL_FLAT, NULL },
+    NULL,
+};
+
+MenuItem render_menus[] = {
+    { "Draw", &xmCascadeButtonGadgetClass, 'D', NULL, NULL, 
+        0, 0, draw_menu },
+    { "Color", &xmCascadeButtonGadgetClass, 'C', NULL, NULL,
+        0, 0, color_menu },
+    { "Screen Door", &xmCascadeButtonGadgetClass, 'S', NULL, NULL,
+        0, 0, scr_door_menu },
+    { "Shading", &xmCascadeButtonGadgetClass, 'h', NULL, NULL,
+        0, 0, shade_menu },
+    NULL,
+};
+
+MenuItem proj3_menu[] = {
+    { "Perspective", &xmPushButtonGadgetClass,'P',"Ctrl<Key>P", "(^p)", 
+	ChangeProj3Mode, (XtPointer) PERSPECTIVE, NULL },
+    { "Orthographic", &xmPushButtonGadgetClass,'O',"Ctrl<Key>O", "(^o)", 
+	ChangeProj3Mode, (XtPointer) ORTHOGONAL, NULL },
+    NULL,
+};
+
+MenuItem proj4_direction_menu[] = {
+    { "XYZ", &xmPushButtonGadgetClass, 0, "<Key>W", "(w)",
+        ChangeProj4Mode, (XtPointer) W, NULL },
+    { "XYW", &xmPushButtonGadgetClass, 0, "<Key>Z", "(z)",
+        ChangeProj4Mode, (XtPointer) Z, NULL },
+    { "XZW", &xmPushButtonGadgetClass, 0, "<Key>Y", "(y)",
+        ChangeProj4Mode, (XtPointer) Y, NULL },
+    { "YZW", &xmPushButtonGadgetClass, 0, "<Key>X", "(x)",
+        ChangeProj4Mode, (XtPointer) X, NULL },
+    NULL,
+};
+
+MenuItem proj4_type_menu[] = {
+    { "Orthogonal", &xmPushButtonGadgetClass,'O',"Shift<Key>O", "(shift+o)",
+	ChangeProj4TypeMode, (XtPointer) ORTHOGONAL, NULL },
+    { "Polar", &xmPushButtonGadgetClass,'P',"Shift<Key>P", "(shift+p)",
+	ChangeProj4TypeMode, (XtPointer) POLAR, NULL },
+    NULL,
+};
+
+MenuItem proj4_menu[] = {
+    {"Direction", &xmPushButtonGadgetClass,'D', NULL, NULL,
+        0, 0, proj4_direction_menu },
+    {"Type", &xmPushButtonGadgetClass,'T', NULL, NULL,
+        0, 0, proj4_type_menu },
+    NULL,
+};
+
+MenuItem proj_menus[] = {
+  { "3D", &xmCascadeButtonGadgetClass, '3', NULL, NULL, 
+    0, 0, proj3_menu },
+  { "4D", &xmCascadeButtonGadgetClass, '4', NULL, NULL,
+    0, 0, proj4_menu },
+  NULL,
+};
+
+MenuItem motion_menus[] = {
+  { "Momentum", &xmToggleButtonGadgetClass, 'M', "Ctrl<Key>M", "(^m)",
+    ChangeMomentumMode, (XtPointer) NULL, NULL },
+  { "Context_free", &xmToggleButtonGadgetClass, 'C', "Ctrl<Key>Q", "(^q)",
+    ChangeContextMode, (XtPointer) NULL, NULL },
+  NULL,
+};
+
+MenuItem mouse3D_menus[] = {
+  { "Toggle", &xmToggleButtonGadgetClass, 'T', "<Key>F3", "(F3)",
+    toggle3dmouse, (XtPointer) NULL, NULL },
+  { "Change Port", &xmPushButtonGadgetClass, 'C', NULL, NULL,
+    ShowDialog, (XtPointer)MOUSE3D_DIALOG, NULL },
+  NULL,
+};
+
+MenuItem modes_menus[] = {
+  { "Motion", &xmToggleButtonGadgetClass, 'M', NULL, NULL,
+    0, 0, motion_menus },
+  { "Object_unit_size", &xmToggleButtonGadgetClass, 'u', "Ctrl<Key>U", "(^u)",
+    ChangeSizeMode, (XtPointer) NULL, NULL },
+#ifndef NO_STEREO
+  { "Stereo_mode", &xmToggleButtonGadgetClass, 'S', "Ctrl<Key>S", "(^s)",
+    ChangeVideoMode, (XtPointer) NULL, NULL },
+#endif
+  { "3D mouse", &xmToggleButtonGadgetClass, '3', NULL, NULL,
+    0, 0, mouse3D_menus },
+  NULL
+};
+
+MenuItem dialog_menu[] = {
+  { "View Settings", &xmPushButtonGadgetClass, 'V', "Shift<Key>V", "(shift+v)",
+    ShowDialog, (XtPointer) SETTING1_DIALOG, NULL },
+  { "Settings", &xmPushButtonGadgetClass, 'S', "Shift<Key>S", "(shift+s)",
+    ShowDialog, (XtPointer) SETTING2_DIALOG, NULL },
+  { "Picker", &xmPushButtonGadgetClass, 'P', "Shift<Key>K", "(shift+k)",
+    ShowDialog, (XtPointer) PICKER_DIALOG, NULL },
+  { "QuatRot", &xmPushButtonGadgetClass, 'Q', "Shift<Key>Q", "(shift+q)",
+    ShowDialog, (XtPointer) QUATROT_DIALOG, NULL },
+  { "KeyFrames", &xmPushButtonGadgetClass, 'F',  "Shift<Key>F", "(shift+f)",
+    ShowDialog, (XtPointer) FRAMES_DIALOG, NULL },
+  NULL,
+};
+
+MenuItem help_menu[] = {
+    { "Help", &xmPushButtonGadgetClass, 'H', "<Key>H", "(h)",
+        ShowDialog, (XtPointer) HELP_DIALOG, NULL },
+    { "About", &xmPushButtonGadgetClass, 'A', NULL, NULL,
+        ShowDialog, (XtPointer) ABOUT_DIALOG, NULL },
+    NULL,
+};
+
+/* Build popup, option and pulldown menus, depending on the menu_type.
+ * It may be XmMENU_PULLDOWN, XmMENU_OPTION or  XmMENU_POPUP.  Pulldowns
+ * return the CascadeButton that pops up the menu.  Popups return the menu.
+ * Option menus are created, but the RowColumn that acts as the option
+ * "area" is returned unmanaged. (The user must manage it.)
+ * Pulldown menus are built from cascade buttons, so this function
+ * also builds pullright menus.  The function also adds the right
+ * callback for PushButton or ToggleButton menu items.
+ */
+Widget
+BuildMenu(Widget parent, int menu_type, char *menu_title, 
+	  char menu_mnemonic, Boolean tear_off, MenuItem *items)
+{
+    Widget menu, cascade, widget;
+    int i;
+    XmString str;
+
+    if (menu_type == XmMENU_PULLDOWN || menu_type == XmMENU_OPTION)
+        menu = XmCreatePulldownMenu (parent, "_pulldown", NULL, 0);
+    else if (menu_type == XmMENU_POPUP)
+        menu = XmCreatePopupMenu (parent, "_popup", NULL, 0);
+    else {
+        XtWarning ("Invalid menu type passed to BuildMenu()");
+        return NULL;
+    }
+    if (tear_off)
+        XtVaSetValues (menu, XmNtearOffModel, XmTEAR_OFF_ENABLED, NULL);
+
+    /* Pulldown menus require a cascade button to be made */
+    if (menu_type == XmMENU_PULLDOWN) {
+        str = XmStringCreateLocalized (menu_title);
+        cascade = XtVaCreateManagedWidget (menu_title,
+            xmCascadeButtonGadgetClass, parent,
+            XmNsubMenuId,   menu,
+            XmNlabelString, str,
+            XmNmnemonic,    menu_mnemonic,
+            NULL);
+        XmStringFree (str);
+    } 
+    else if (menu_type == XmMENU_OPTION) {
+        /* Option menus are a special case, but not hard to handle */
+        Arg args[5];
+        int n = 0;
+        str = XmStringCreateLocalized (menu_title);
+        XtSetArg (args[n], XmNsubMenuId, menu); n++;
+        XtSetArg (args[n], XmNlabelString, str); n++;
+        /* This really isn't a cascade, but this is the widget handle
+         * we're going to return at the end of the function.
+         */
+        cascade = XmCreateOptionMenu (parent, menu_title, args, n);
+        XmStringFree (str);
+    }
+
+    /* Now add the menu items */
+    for (i = 0; items[i].label != NULL; i++) {
+        /* If subitems exist, create the pull-right menu by calling this
+         * function recursively.  Since the function returns a cascade
+         * button, the widget returned is used..
+         */
+        if (items[i].subitems)
+            if (menu_type == XmMENU_OPTION) {
+                XtWarning ("You can't have submenus from option menu items.");
+                continue;
+            } 
+            else
+                widget = BuildMenu (menu, XmMENU_PULLDOWN, items[i].label, 
+                    items[i].mnemonic, tear_off, items[i].subitems);
+        else
+            widget = XtVaCreateManagedWidget (items[i].label,
+                *items[i].class, menu,
+                NULL);
+
+        /* Whether the item is a real item or a cascade button with a
+         * menu, it can still have a mnemonic.
+         */
+        if (items[i].mnemonic)
+            XtVaSetValues (widget, XmNmnemonic, items[i].mnemonic, NULL);
+
+        /* any item can have an accelerator, except cascade menus. But,
+         * we don't worry about that; we know better in our declarations.
+         */
+        if (items[i].accelerator) {
+            str = XmStringCreateLocalized (items[i].accel_text);
+            XtVaSetValues (widget,
+                XmNaccelerator, items[i].accelerator,
+                XmNacceleratorText, str,
+                NULL);
+            XmStringFree (str);
+        }
+
+        if (items[i].callback)
+            XtAddCallback (widget,
+                (items[i].class == &xmToggleButtonWidgetClass ||
+                 items[i].class == &xmToggleButtonGadgetClass) ?
+		    XmNvalueChangedCallback : /* ToggleButton class */
+                    XmNactivateCallback,      /* PushButton class */
+                items[i].callback, items[i].callback_data);
+    }
+
+    /* for popup menus, just return the menu; pulldown menus, return
+     * the cascade button; option menus, return the thing returned
+     * from XmCreateOptionMenu().  This isn't a menu, or a cascade button!
+     */
+    return menu_type == XmMENU_POPUP ? menu : cascade;
+}
+
+void build_ui() 
+{
+  Widget frame, mainWindow, menuBar, pathList;
+  Widget helpMenu, temp;
+  Arg args[100];
+  int n;
+  char *path;
+  XmString str, homedir_str;
+
+  /* Add action/functions used by the translation table */
+  XtAppAddActions(app_context, actions, XtNumber(actions));
+
+  mainWindow = XtVaCreateManagedWidget("mainWindow", 
+       xmMainWindowWidgetClass, topLevel, NULL); 
+
+  /* register converter for tearoff menus */
+  XmRepTypeInstallTearOffModelConverter();
+
+  /* create menu bar along top inside of main window */
+  menuBar = XmCreateMenuBar(mainWindow, "menuBar", NULL, 0);
+  BuildMenu(menuBar, XmMENU_PULLDOWN, "File", 'F', True, file_menus);
+  BuildMenu(menuBar, XmMENU_PULLDOWN, "Render", 'R', True, render_menus);
+  BuildMenu(menuBar, XmMENU_PULLDOWN, "Projection", 'P', True, proj_menus);
+  BuildMenu(menuBar, XmMENU_PULLDOWN, "Modes", 'M', True, modes_menus);
+  BuildMenu(menuBar, XmMENU_PULLDOWN, "Panels", 'a', False, dialog_menu);
+  helpMenu=BuildMenu(menuBar, XmMENU_PULLDOWN, "Help", 'H', False, help_menu);
+  /* tell menuBar which is the help button (will be specially positioned) */
+  XtVaSetValues(menuBar, XmNmenuHelpWidget, helpMenu,	NULL);
+  XtManageChild(menuBar);
+  
+  frame = XtVaCreateManagedWidget("frame", 
+      xmFrameWidgetClass, mainWindow, 
+      NULL);
+
+  /*  Set MainWindow areas */
+  XmMainWindowSetAreas (mainWindow, menuBar, NULL, NULL, NULL, frame);
+  
+  /* create GL drawing area */
+  n = 0;
+  XtSetArg(args[n], GLwNrgba, TRUE); n++;
+  XtSetArg(args[n], GLwNdepthSize, 1); n++; /* very important for REs */
+  XtSetArg(args[n], XmNtranslations, 
+	   XtParseTranslationTable(translations)); n++;
+  glw = GLwCreateMDrawingArea(frame, "glwidget", args, n);
+  XtManageChild (glw);
+
+  XtAddCallback(glw, GLwNginitCallback, initCB, (XtPointer) NULL); 
+  XtAddCallback(glw, GLwNexposeCallback, exposeCB, (XtPointer) NULL);
+  XtAddCallback(glw, GLwNresizeCallback, resizeCB, (XtPointer) NULL);
+
+  n = 0;  /* helpBox */
+  XtSetArg(args[n], XmNtitle, "help"); n++;
+  helpBox = XmCreateMessageDialog(menuBar, "helpBox", args, n);
+  temp = XmMessageBoxGetChild (helpBox, XmDIALOG_CANCEL_BUTTON);
+  XtUnmanageChild (temp);
+  temp = XmMessageBoxGetChild (helpBox, XmDIALOG_HELP_BUTTON);
+  XtUnmanageChild (temp);
+  /* helpList, global, initialized in ui_init.c */
+  helpList = XmCreateScrolledList(helpBox, "helpList", NULL, 0);
+  XtManageChild(helpList);
+
+  n = 0;  /* aboutBox */
+  XtSetArg(args[n], XmNtitle, "About..."); n++;
+  aboutBox = XmCreateMessageDialog(menuBar, "aboutBox", args, n);
+  temp = XmMessageBoxGetChild (aboutBox, XmDIALOG_CANCEL_BUTTON);
+  XtUnmanageChild (temp);
+  temp = XmMessageBoxGetChild (aboutBox, XmDIALOG_HELP_BUTTON);
+  XtUnmanageChild (temp);
+  XtVaSetValues(aboutBox, XtVaTypedArg, 
+		XmNmessageString, XmRString, 
+		"        Meshview 1.2   \n\n"
+		"     Indiana University \n"
+		" Computer Science Department", 45, 
+		NULL);
+  
+  /* create file boxes */
+  homedir_str = XmStringCreateLocalized(".");
+
+  n = 0;  /* loading data file-box */
+  XtSetArg(args[n], XmNtitle, "Loading data..."); n++;
+  fileBoxData = XmCreateFileSelectionDialog(menuBar, "fileBoxData", args, n);
+  XtVaSetValues(fileBoxData, 
+		XtVaTypedArg, XmNselectionLabelString, 
+		XmRString, "Loading data...", 16,
+		XtVaTypedArg, XmNpattern, XmRString, "*.*", 6,
+		NULL);
+  XtAddCallback(fileBoxData, XmNcancelCallback, CloseIt, fileBoxData);
+  /* add XmNokCallback later */
+  temp = XmFileSelectionBoxGetChild (fileBoxData, XmDIALOG_HELP_BUTTON);
+  XtUnmanageChild (temp);
+  /* create path list */
+  temp = XtCreateManagedWidget("fileBoxPathRC", xmRowColumnWidgetClass, 
+			       fileBoxData, NULL, 0);
+  XtCreateManagedWidget("Path List:", xmLabelWidgetClass, temp, NULL, 0);
+
+  pathList = XmCreateScrolledList(temp, "pathList", NULL, 0);
+  XtManageChild(pathList);
+  XtAddCallback(pathList, XmNbrowseSelectionCallback, changePath, fileBoxData);
+  XmListAddItem(pathList, homedir_str, 0);
+
+  if((path = getenv("MESHVIEW_DATA")) != NULL) {
+    str = XmStringCreateLocalized(path);
+    XtVaSetValues(fileBoxData, XmNdirectory, str, NULL);
+    XmListAddItem(pathList, str, 0);
+    XmStringFree(str);
+    XtVaSetValues(pathList, XmNvisibleItemCount, 2, NULL);
+  }
+
+  n = 0;  /* load/save settings file-box */
+  XtSetArg(args[n], XmNtitle, "Setting"); n++;
+  fileBoxSetting = XmCreateFileSelectionDialog(menuBar, "fileBoxSetting", 
+					       args, n);
+  XtVaSetValues(fileBoxSetting,
+		XtVaTypedArg, XmNpattern, XmRString, "*.set", 6,
+		NULL);
+  XtAddCallback(fileBoxSetting, XmNcancelCallback, CloseIt, fileBoxSetting);
+  /* add in XmNokCallback later */
+  temp = XmFileSelectionBoxGetChild (fileBoxSetting, XmDIALOG_HELP_BUTTON);
+  XtUnmanageChild (temp);
+  /* create path list */
+  temp = XtCreateManagedWidget("fileBoxPathRC", xmRowColumnWidgetClass, 
+			       fileBoxSetting, NULL, 0);
+  XtCreateManagedWidget("Path List:", xmLabelWidgetClass, temp, NULL, 0);
+
+  pathList = XmCreateScrolledList(temp, "pathList", NULL, 0);
+  XtManageChild(pathList);
+  XtAddCallback(pathList, XmNbrowseSelectionCallback, 
+		changePath, fileBoxSetting);
+  XmListAddItem(pathList, homedir_str, 0);
+
+  if((path = getenv("MESHVIEW_SETTING")) != NULL) {
+    str = XmStringCreateLocalized(path);
+    XtVaSetValues(fileBoxSetting, XmNdirectory, str, 
+		  XtVaTypedArg, XmNpattern, XmRString, "*.set", 6,
+		  NULL);
+    XmListAddItem(pathList, str, 0);
+    XmStringFree(str);
+    XtVaSetValues(pathList, XmNvisibleItemCount, 2, NULL);
+  }
+
+  n = 0;  /* loading palette file-box */
+  XtSetArg(args[n], XmNtitle, "Loading palette..."); n++;
+  fileBoxPalette = XmCreateFileSelectionDialog(menuBar, "fileBoxPalette", 
+					       args, n);
+  XtVaSetValues(fileBoxPalette, XtVaTypedArg, XmNselectionLabelString, 
+		XmRString, "Loading palette...", 19, 
+		XtVaTypedArg, XmNpattern, XmRString, "*.pl", 6,
+		NULL);
+  XtAddCallback(fileBoxPalette, XmNcancelCallback, CloseIt, fileBoxPalette);
+  XtAddCallback(fileBoxPalette, XmNokCallback, Loadsave, 
+		(XtPointer) LOAD_PALETTE);
+  temp = XmFileSelectionBoxGetChild (fileBoxPalette, XmDIALOG_HELP_BUTTON);
+  XtUnmanageChild (temp);
+  /* create path list */
+  temp = XtCreateManagedWidget("fileBoxPathRC", xmRowColumnWidgetClass, 
+			       fileBoxPalette, NULL, 0);
+  XtCreateManagedWidget("Path List:", xmLabelWidgetClass, temp, NULL, 0);
+
+  pathList = XmCreateScrolledList(temp, "pathList", NULL, 0);
+  XtManageChild(pathList);
+  XtAddCallback(pathList, XmNbrowseSelectionCallback, 
+		changePath, fileBoxPalette);
+  XmListAddItem(pathList, homedir_str, 0);
+
+  if((path = getenv("MESHVIEW_PALETTE")) != NULL) {
+    str = XmStringCreateLocalized(path);
+    XtVaSetValues(fileBoxPalette, XmNdirectory, str, NULL);
+    XmListAddItem(pathList, str, 0);
+    XmStringFree(str);
+    XtVaSetValues(pathList, XmNvisibleItemCount, 2, NULL);
+  }
+
+  n = 0;  /* loading palette file-box */
+  XtSetArg(args[n], XmNtitle, "Loading texture..."); n++;
+  fileBoxTexture = XmCreateFileSelectionDialog(menuBar, "fileBoxTexture", 
+					       args, n);
+  XtVaSetValues(fileBoxTexture, 
+		XtVaTypedArg, XmNselectionLabelString, 
+		XmRString, "Loading texture...", 19, 
+		XtVaTypedArg, XmNpattern, XmRString, "*.p?m", 6,
+		NULL);
+  XtAddCallback(fileBoxTexture, XmNcancelCallback, CloseIt, fileBoxTexture);
+  XtAddCallback(fileBoxTexture, XmNokCallback, Loadsave, 
+		(XtPointer) LOAD_TEXTURE);
+  temp = XmFileSelectionBoxGetChild (fileBoxTexture, XmDIALOG_HELP_BUTTON);
+  XtUnmanageChild (temp);
+  /* create path list */
+  temp = XtCreateManagedWidget("fileBoxPathRC", xmRowColumnWidgetClass, 
+			       fileBoxTexture, NULL, 0);
+  XtCreateManagedWidget("Path List:", xmLabelWidgetClass, temp, NULL, 0);
+
+  pathList = XmCreateScrolledList(temp, "pathList", NULL, 0);
+  XtManageChild(pathList);
+  XtAddCallback(pathList, XmNbrowseSelectionCallback, 
+		changePath, fileBoxTexture);
+  XmListAddItem(pathList, homedir_str, 0);
+
+  if((path = getenv("MESHVIEW_TEXTURE")) != NULL) {
+    str = XmStringCreateLocalized(path);
+    XtVaSetValues(fileBoxTexture, XmNdirectory, str, NULL);
+    XmListAddItem(pathList, str, 0);
+    XmStringFree(str);
+    XtVaSetValues(pathList, XmNvisibleItemCount, 2, NULL);
+  }
+
+  n = 0; /* saving ppm */
+  XtSetArg(args[n], XmNtitle, "Saving ppm..."); n++;
+  fileBoxPpm = XmCreateFileSelectionDialog(menuBar, "fileBoxPpm", args, n);
+  XtVaSetValues(fileBoxPpm, 
+		XtVaTypedArg, XmNselectionLabelString, 
+		XmRString, "Saving ppm...", 14,	
+		XtVaTypedArg, XmNpattern, XmRString, "*.ppm", 6,
+		NULL);
+  XtAddCallback(fileBoxPpm, XmNcancelCallback, CloseIt, fileBoxPpm);
+  XtAddCallback(fileBoxPpm, XmNokCallback, Loadsave, (XtPointer) SAVE_PPM);
+  temp = XmFileSelectionBoxGetChild (fileBoxPpm, XmDIALOG_HELP_BUTTON);
+  XtUnmanageChild (temp);
+
+  XmStringFree(homedir_str);
+  /* end of create file boxes */
+
+  n = 0; /* saving ppm */
+  XtSetArg(args[n], XmNtitle, "3D Mouse Dialog..."); n++;
+  mouse3dDialod = XmCreatePromptDialog(menuBar, "mouse3dDialod", args, n);
+  XtVaSetValues(mouse3dDialod,
+		XtVaTypedArg, XmNokLabelString, XmRString, "Set", 5,
+		XtVaTypedArg, XmNhelpLabelString, XmRString, "Reset", 5,
+		XtVaTypedArg, XmNtextString, XmRString, 
+ 		              dftmouse3dport, sizeof(dftmouse3dport),
+		XmNdefaultButton, NULL,
+		NULL);
+  XtAddCallback(mouse3dDialod, XmNhelpCallback, change3dmouseport,(XtPointer)NULL);
+  XtAddCallback(mouse3dDialod, XmNokCallback, change3dmouseport, (XtPointer)NULL);
+  mouse3dport = dftmouse3dport;
+
+  /* error message box */
+  n = 0;
+  XtSetArg(args[n], XmNtitle, "error"); n++;
+  errorBox = XmCreateErrorDialog(menuBar, "errorBox", args, n);
+  temp = XmMessageBoxGetChild (errorBox, XmDIALOG_CANCEL_BUTTON);
+  XtUnmanageChild (temp);
+  temp = XmMessageBoxGetChild (errorBox, XmDIALOG_HELP_BUTTON);
+  XtUnmanageChild (temp);
+
+  build_uiSetting(menuBar);
+  build_uiPicker(menuBar);  
+  build_uiQuatrot(menuBar);  
+  build_uiFrames(menuBar);
+}

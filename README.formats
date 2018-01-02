@@ -1,0 +1,419 @@
+                          MESHVIEW FILE FORMATS
+
+
+Note: This document partially uses OOGL file format documentation distributed 
+      with Geomview.
+
+
+The Meshview 1.2 supports MESH, OFF, LIST, FRAMES, DOT, and LINE formats.
+MESH, OFF and LIST are very similar to the OOGL file formats.
+The OOGL formats are not fully implemented (no support for files 
+with more than 4 dimensions), but several features are added.
+
+FRAMES, DOT and LINE are specific to Meshview. FRAMES format is used for 
+key frame animation,  DOT and LINE are used to display dots and lines 
+respectively.
+
+				========
+				 SYNTAX
+				========
+Keywords:
+=========
+Keywords are case sensitive. Some have optional prefix and suffix letters 
+indicating presence of color or other data; in this case the order of 
+prefixes and suffixes is significant,
+
+File Names:
+===========
+Meshview uses the file suffix to guess at the file type. If the suffix is 
+unrecognized, or if no suffix is available, all known types of objects are 
+tried in turn until one accepts the data as valid. 
+
+Vertices:
+=========
+All data for a vertex are grouped together.
+The syntax is 
+
+`x y z' 
+     	(3-D floating-point vertex coordinates) or 
+`x y z w' 
+     	(4-D floating-point vertex coordinates) 
+
+optionally followed by 
+
+`nx ny nz' 
+     	(normalized 3-D surface-normal if present) 
+	Note: specified normals are not used in Meshview. They are 
+        recalculated for each vertex.
+
+optionally followed by 
+
+`r g b a' 
+     	(4-component floating-point color if present, each component in 
+	 range 0..1. The a (alpha) component represents opacity: 0 transparent,
+	 1 opaque.) 
+`r g b a' 
+
+        (4-component floating-point back side color if present
+
+optionally followed by 
+
+`s t' 
+`or' 
+`s t u' 
+	(two or three texture-coordinate values). 
+
+Values are separated by white space. Line breaks are immaterial. 
+
+Comments:
+=========
+Comments begin with # and continue to the end of the line; they are allowed 
+anywhere a newline is. 
+
+
+			=====================
+			 Object File Formats
+			=====================
+
+MESH: rectangularly-connected mesh
+===================================
+The conventional suffix for a MESH file is `.mesh'. 
+`.3mesh', `.meshc', and `.4mesh' are also supported.
+
+The file syntax is 
+
+[U][C][C][N][Z][3][4][u][v][n]MESH[C][C]  # key word
+
+[front.color]  # color of the object (front side), present only if MESHC
+[back.color]   # color of the object (back side), present only if MESHCC
+[Ndim]       # Space dimension, present only if nMESH. Unsupported in Meshview.
+Nu Nv        # Mesh grid dimensions
+
+vertex(u=0,v=0)  vertex(1,0)  ...   vertex(Nu-1,0)
+vertex(0,1)        ...              vertex(Nu-1,1)
+...
+vertex(0,Nv-1)     ...              vertex(Nu-1,Nv-1)
+
+
+The key word is [U][C][C][N][Z][3][4][u][v][n]MESH [C][C]
+	
+The optional prefix characters mean: 
+
+`U' Each vertex includes a 3-component texture space parameter. 
+    The first two components are the usual S and T texture parameters for that
+    vertex; the third should be specified as zero. 
+`C' Each vertex (see Vertices above) includes a 4-component color (front side).
+`C' Each vertex (see Vertices above) includes a 4-component color (back side). 
+`N' Each vertex includes a surface normal vector. (Not used. In Meshview
+    normals are recalculated for each face.)
+`Z' Of the 3 vertex position values, only the Z component is present; 
+    X and Y are omitted, and assumed to equal the
+    mesh (u,v) coordinate so X ranges from 0 .. (Nu-1), Y from 0 .. (Nv-1) \
+    where Nu and Nv are the mesh dimensions
+`3' Vertices are 3D, each consists of 3 floating values. 3 and 4 cannot both 
+    be present.
+`4' Vertices are 4D, each consists of 4 floating values. Z and 4 cannot both 
+    be present. 3 and 4 cannot both be present.
+`u' The mesh is wrapped in the u-direction, so the (0,v)'th vertex is 
+    connected to the (Nu-1,v)'th for all v. 
+`v' The mesh is wrapped in the v-direction, so the (u,0)'th vertex is 
+    connected to the (u,Nv-1)'th for all u. Thus a u-wrapped or v-wrapped 
+    mesh is topologically a cylinder, while a uv-wrapped mesh is a torus. 
+`n' NOTE: This format is unsupported in Meshview 1.2. 
+    Specifies a mesh whose vertices live in a higher dimensional space. 
+    The dimension follows the "MESH" keyword.
+    Each vertex then has Ndim components. 
+
+The optional postfix characters mean: 
+
+`C' object includes a 4-component color (front side).
+`C' object includes a 4-component color (back side). 
+
+
+Note that the order of prefix characters is significant; a colored, 
+u-wrapped mesh is a CuMESH not a uCMESH. 
+
+Following the mesh header are RGBA colors of the object (if [C] postfix are
+specified) and integers Nu and Nv, the dimensions of the mesh. 
+
+Then follow Nu*Nv vertices, each in the form given by the header. 
+They appear in v-major order, i.e. if we name each
+vertex by (u,v) then the vertices appear in the order 
+
+(0,0) (1,0) (2,0) (3,0) ...  (Nu-1,0)
+(0,1) (1,1) (2,1) (3,1) ...  (Nu-1,1)
+...
+(0,Nv-1)                ...  (Nu-1,Nv-1)
+
+
+
+OFF Files
+==========
+The conventional suffix for OFF files is `.off'. 
+3`.off' and `.4off' are also supported.
+
+Syntax: 
+
+[ST][C][C][D][D][N][3][4][n]OFF[C][C]   # Header keyword
+[front.color]  # color of the object (front side), present only if OFFC
+[back.color]   # color of the object (back side), present only if OFFCC
+[Ndim]        # Space dimension, present only if nOFF (unsupported in Meshview)
+NVertices  NFaces  NEdges   # NEdges not used or checked but have to be present
+
+x[0]  y[0]  z[0]        # Vertices, possibly with normals,
+                        # colors, and/or texture coordinates, in that order,
+                        # if the prefixes N, C, C, ST
+                        # are present.
+                        # If 4OFF, each vertex has 4 components.
+...
+x[NVertices-1]  y[NVertices-1]  z[NVertices-1]
+
+                        # Faces, possibly with colors
+			# if the prefixes D, D, are present.
+                        # Nv = # vertices on this face
+                        # v[0] ... v[Nv-1]: vertex indices
+                        # in range 0..NVertices-1
+Nv  v[0] v[1] ... v[Nv-1]  [color.front] [color.back]
+...
+
+The optional prefix characters mean: 
+
+`ST' Each vertex includes a 2-component texture space parameter. 
+`C' Each vertex (see Vertices above) includes a 4-component color (front side).
+`C' Each vertex (see Vertices above) includes a 4-component color (back side). 
+`D' Each face includes a 4-component color (front side).
+`D' Each face includes a 4-component color (back side). 
+`N' Each vertex includes a surface normal vector. (Not used. In Meshview
+    normals are recalculated for each face.)
+`3' Vertices are 3D, each consists of 3 floating values. 3 and 4 cannot both 
+    be present.
+`4' Vertices are 4D, each consists of 4 floating values. 3 and 4 cannot both 
+    be present.
+`n' NOTE: This format is unsupported in Meshview 1.2. 
+    Specifies a mesh whose vertices live in a higher dimensional space. 
+    The dimension follows the "OFF" keyword.
+    Each vertex then has Ndim components. 
+
+The optional postfix characters mean: 
+
+`C' object includes a 4-component color (front side).
+`C' object includes a 4-component color (back side). 
+
+Note that the order of prefix characters is significant.
+
+OFF files (name for "object file format") represent collections of planar 
+polygons with possibly shared vertices, a convenient way to describe 
+polyhedra. The polygons may be concave but there's no provision for polygons 
+containing holes. 
+
+An OFF file must begin with the keyword OFF.
+
+Following the OFF header are RGBA colors of the object (if [C] postfixes are
+specified) and three ASCII integers : NVertices, NFaces, and NEdges. 
+These are the number of vertices, faces, and edges, respectively. 
+Meshview does not use nor check NEdges; it needn't be correct but must be 
+present. 
+
+The vertex coordinates follow: dimension * Nvertices floating-point values. 
+They're implicitly numbered 0 through NVertices-1. 
+dimension is either 3 (default) or 4 (specified by the key character 4 
+directly before OFF in the keyword). 
+
+Following these are the face descriptions. 
+Each has the form 
+
+N  Vert1 Vert2 ... VertN  [color.front] [color.back]
+
+Here N is the number of vertices on this face, and Vert1 through VertN are 
+indices into the list of vertices (in the range 0..NVertices-1). 
+
+The optional colors are in RGBA representation and present only if
+[D] [D] prefixes are specified.
+
+
+DOT: used to display dots
+=========================
+
+The conventional suffix for a DOT file is `.dot'. 
+
+The file syntax is 
+
+[S][C][3][4]DOT[C]  # key word
+[color]  # color of dots, present only if DOTC
+[size]   # size of dots (points), present only if SDOT
+Ndots    # number of dots
+
+x[0] y[0] z[0] [w[0]]   # Dots, possibly with colors
+                        # if the prefix C is present.
+...
+x[Ndots-1]  y[Ndots-1]  z[Ndots-1] [w[Ndots-1]] 
+
+The optional prefix characters mean: 
+
+`S' Size specified for all dots.
+`C' Each dot includes a 4-component color (RGBA).
+`3' Dots are 3D, each consists of 3 floating values. 3 and 4 cannot both 
+    be present.
+`4' Dots are 4D, each consists of 4 floating values. 3 and 4 cannot both 
+    be present.
+
+The optional postfix characters mean: 
+
+`C' 4-component color is specified for all dots.
+
+Note that the order of prefix characters is significant.
+
+Following the DOT header are RGBA color for all dots (if [C] postfix is
+present), size for all dots (if [S] prefix is present) and integer Ndots, 
+the number of dots in object.
+
+The dot coordinates follow: dimension * Nvertices floating-point values. 
+They're implicitly numbered 0 through Ndots-1. 
+Dimension is either 3 (default) or 4 (specified by the key character 4 
+directly before DOT in the keyword). 
+
+LINE:LINE_STRIP:LINE_LOOP used to display lines
+===============================================
+
+The conventional suffix for a LINE file is `.line'. 
+
+LINE is interpreted as pairs of disjoint segments, (v[0],v[1]),
+   (v[1],v[2]), etc.  Since segments are actually specified by
+    assigning vertex id's, vertices may be reused.
+LINE_STRIP  is interpreted as a single curve, (v[0],v[1], v[2],v[3],...);
+    vertex id's are not supplied for STRIP or LOOP objects.
+LINE_LOOP  closes the curve with v[0] = v[Nvertices]
+
+The file syntax is 
+
+[S][C][3][4]LINE*[C]  # key word
+[color]  # color of lines, present only if LINEC
+[size]   # size of lines (points), present only if SLINE
+Nvertices # number of vertices
+Nlines    # number of lines must be present, but used only in LINE format
+
+x[0] y[0] z[0] [w[0]]   # Vertices, possibly with colors
+                        # if the prefix C is present.
+...
+x[Nvertices-1]  y[Nvertices-1]  z[Nvertices-1] [w[Nvertices-1]] 
+
+			# Lines
+                        # v[0] ... v[Nv-1]: vertex indices
+                        # in range 0..NVertices-1
+
+v[0] v[1]      # present for LINE format only
+...
+
+The optional prefix characters mean: 
+
+`S' Size specified for all lines.
+`C' Each line includes a 4-component color (RGBA).
+`3' Vertices are 3D, each consists of 3 floating values. 3 and 4 cannot both 
+    be present.
+`4' Vertices are 4D, each consists of 4 floating values. 3 and 4 cannot both 
+    be present.
+
+The optional postfix characters mean: 
+
+`C' 4-component color is specified for all lines.
+
+Note that the order of prefix characters is significant.
+
+Following the LINE header are RGBA color for all vertices (if [C] postfix is
+present), size for all lines (if [S] prefix is present) and 2 integers:
+Nvertices, the number of vertices in the object, and Nlines, the number of
+lines in the object.
+
+The vertex coordinates follow: dimension * Nvertices floating-point values. 
+They're implicitly numbered 0 through NVertices-1. 
+dimension is either 3 (default) or 4 (specified by the key character 4 
+directly before LINE in the keyword). 
+
+Following these are the line descriptions. 
+Each has the form:
+
+Vert1 Vert2
+Vert1 through Vert2 are indices into the list of vertices
+(in the range 0..NVertices-1). 
+
+LIST Files
+==========
+
+The conventional suffix for a LIST file is `.list'. 
+
+A list of supported by Meshview objects, typically file names with paths.
+
+Syntax: 
+
+LIST
+object
+object
+ ...
+
+FRAMES Files
+==========
+
+The conventional suffix for a LIST file is `.frm'. 
+
+A list of key frames.
+
+Syntax: 
+
+FRAMES   # keyword
+Nframes  # number of frames
+frame
+frame
+ ...
+
+A Frame can be any kind of object supported by Meshview, 
+except LIST's including other LIST's asd FRAMES itself.
+All frames should correspond to the same object. (E.g. same format,
+same number of vertices etc.).
+
+The FRAMES format is used to display key frame animation.
+Meshview interpolates between vertex and texture coordinates in adjacent 
+frames.
+
+
+
+PALETTE FILE FORMAT (.pl)
+========================
+
+Syntax: (No comments are allowed)
+
+PALETTE  # Keyword
+r g b    # red, green and blue components between 0 and 1
+r g b    
+.
+.
+.
+
+See the files in the palette directory.
+The default palette is a palette of rainbow (default.pl).
+
+
+SETTING FILE FORMAT (.set)
+==========================
+
+Syntax: (No comments are allowed)
+
+SETTING                # Starting keyword
+FOV <float>            # field of view, between 5 and 150
+NEAR <float>           # near clip plane, between 0.1 and 40
+FAR <float>            # far clip plane, between 0.1 and 40
+SCALE <float>          # scale of the objects, between 0.1 and 10
+SPECULAR <float>       # specular, between 0 and 1
+SHININESS <float>      # shininess exponent, between 1 and 300
+BGRED <float>          # red component of background color, between 0 and 1
+BGGREEN <float>        # green component of background color, between 0 and 1
+BGBLUE <float>         # blue component of background color, between 0 and 1
+BGALPHA <float>        # alpha component of background color, between 0 and 1
+LIGHTPOS <3 floats>    # light direction, a point on the unit sphere
+4DMAT <16 floats>      # 4D rotation matrix
+3DROTMAT <16 floats>   # 3D rotation matrix in homogeneous coordinate sys
+3DTRANMAT <16 floats>  # 3D translation matrix in homogeneous coordinate sys
+
+The order of keywords is insignificant, and partial lists are ok.
+See default.set in the setting directory for the default values.
+This file is very helpful for saving and regenerating scenes.
+

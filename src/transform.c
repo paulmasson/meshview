@@ -1,0 +1,314 @@
+#define TRANSFORM_C
+#define DEPTH_DEBUG 0		/* change to print depth warnings */
+#include "all.h"
+
+void transform() {
+  static GLdouble scale;
+  double d0, d1, d2;
+  
+  scale = 0.003 * m_speed;
+  glMatrixMode(GL_MODELVIEW);
+  if(motion_flag == SHIFT) {
+    if(button_flag == Button3) {
+      /* 3D rotation around z-axis */
+      glLoadMatrixd(d_rot_mat.d);
+      glMultMatrixd(rot_mat.d);
+      glGetDoublev(GL_MODELVIEW_MATRIX, rot_mat.d);
+      glLoadMatrixd(trans_mat.d);
+      glMultMatrixd(rot_mat.d);
+    }      
+    else {
+      mat4 = Matrix4TimesMatrix4(&d_mat4, &mat4);
+      if(contextf_flag == ON) {
+	CombineRot();
+	glLoadMatrixd(trans_mat.d);
+      }
+      From4DTo3D();
+      if(picker_flag == ON) setPicker ();
+      AutoSmooth();
+      redraw_flag = ON;
+    }
+  }
+  else if(motion_flag == CTRL) {
+    d0 = d_rot_mat.d[0] * ltp[0] + d_rot_mat.d[4] * ltp[1]
+       + d_rot_mat.d[8] * ltp[2];
+    d1 = d_rot_mat.d[1] * ltp[0] + d_rot_mat.d[5] * ltp[1]
+       + d_rot_mat.d[9] * ltp[2];
+    d2 = d_rot_mat.d[2] * ltp[0] + d_rot_mat.d[6] * ltp[1]
+       + d_rot_mat.d[10] * ltp[2];
+    ltp[0] = d0;    ltp[1] = d1;    ltp[2] = d2;
+    glPushMatrix();
+    glLoadIdentity();
+    glLightfv(GL_LIGHT0,GL_POSITION,ltp);
+    glEnable(GL_LIGHT0); /* enable the lighting with identity matrix */
+    glPopMatrix();
+    redraw_flag = ON;
+  }
+  else { /* motion_flag == NONE */
+    switch(button_flag) {
+    case Button1:
+      /* 3D rotation */
+      glLoadMatrixd(d_rot_mat.d);
+      glMultMatrixd(rot_mat.d);
+      glGetDoublev(GL_MODELVIEW_MATRIX, rot_mat.d);
+      break;
+    case Button2:
+      /* 3D translation in x-y plane*/
+      glLoadMatrixd(trans_mat.d);
+      glTranslated(scale*(GLdouble)dmousex, scale*(GLdouble)dmousey, 0.0);
+      glGetDoublev(GL_MODELVIEW_MATRIX, trans_mat.d);
+      break;
+    case Button3:
+      /* 3D translation along z-axis */
+      glLoadMatrixd(trans_mat.d);
+      glTranslated(0.0, 0.0, -scale*(GLdouble)dmousey);
+      glGetDoublev(GL_MODELVIEW_MATRIX, trans_mat.d);
+      break;
+    }
+    glLoadMatrixd(trans_mat.d);
+    glMultMatrixd(rot_mat.d);
+    if(picker_flag == ON) setPicker();
+  }
+  draw_all();
+}
+  
+/* 
+ The ordering of a MatrixGL :
+   0  4  8 12
+   1  5  9 13
+   2  6 10 14
+   3  7 11 15 
+*/
+void MakeRot3(double x, double y) {
+  double d, d1, D1, c, s;
+  double R = 200.0;
+
+  d = sqrt(x*x+y*y);  
+  d1 = 1.0 / d;
+  D1 = 1.0 / sqrt(d*d + R*R);
+  x *= d1;
+  y *= d1;
+  c = R * D1;
+  s = d * D1;
+
+  d_rot_mat.d[0] = 1.0 - x * x * (1.0 - c);
+  d_rot_mat.d[1] = -(1.0 -c) * x * y;
+  d_rot_mat.d[2] = -s * x;
+/*  d_rot_mat.d[3] = 0.0; */
+  d_rot_mat.d[4] = d_rot_mat.d[1];
+  d_rot_mat.d[5] = 1.0 - y * y * (1.0 - c);
+  d_rot_mat.d[6] = -s * y;
+/*  d_rot_mat.d[7] = 0.0; */
+  d_rot_mat.d[8] = -d_rot_mat.d[2];
+  d_rot_mat.d[9] = -d_rot_mat.d[6];
+  d_rot_mat.d[10] = c;
+/*  d_rot_mat.d[11] = 0.0; */
+/*  d_rot_mat.d[12] = 0.0; */
+/*  d_rot_mat.d[13] = 0.0; */
+/*  d_rot_mat.d[14] = 0.0; */
+/*  d_rot_mat.d[15] = 1.0; */
+}
+
+void MakeRot3Z(double x) {
+  double D1, c, s;
+  double R = 200.0;
+
+  D1 = 1.0 / sqrt(x*x + R*R);
+  c = R * D1;
+  s = x * D1;
+  d_rot_mat = IMatGL;
+  d_rot_mat.d[0] = c;
+  d_rot_mat.d[1] = s;
+  d_rot_mat.d[4] = -s;
+  d_rot_mat.d[5] = c;
+}
+
+void MakeRot4(double x, double y, double z) {
+  double d, d1, D1, c, s;
+  double R = 200.0;
+  
+  d = sqrt(x*x+y*y+z*z);
+  d1 = 1.0/d;
+  x *= d1;
+  y *= d1;
+  z *= d1;
+  D1 = 1.0 / sqrt(d*d + R*R);
+  c = R*D1;
+  s = d*D1;
+  d_mat4.d[0] = 1.-x*x*(1.-c);
+  d_mat4.d[4] = -(1.-c)*x*y;
+  d_mat4.d[8] = -(1.-c)*x*z;
+  d_mat4.d[12] = s*x;
+  d_mat4.d[1] = d_mat4.d[4];
+  d_mat4.d[5] = 1.-y*y*(1.-c);
+  d_mat4.d[9] = -(1.-c)*y*z;
+  d_mat4.d[13] = s*y;
+  d_mat4.d[2] = d_mat4.d[8];
+  d_mat4.d[6] = d_mat4.d[9];
+  d_mat4.d[10] = 1.-z*z*(1.-c);
+  d_mat4.d[14] = s*z;
+  d_mat4.d[3] = -d_mat4.d[12];
+  d_mat4.d[7] = -d_mat4.d[13];
+  d_mat4.d[11] = -d_mat4.d[14];
+  d_mat4.d[15] = c;
+}
+
+/* calculate plane and vertex normals */
+void AutoSmooth() {
+  int i, j, k;
+  Vector3 v;
+  Obj *obj;
+  int nf, nv, nF;
+  Face *F;
+  Vertex *V;
+  Vector3 *N;
+  
+  for(k=0; k<nobjs; k++) {
+    obj = olist[k];
+    if(olist[k]->gformat == DOT || olist[k]->gformat == LINE)
+      continue;
+    nf = obj->nfaces;
+    for(i=0; i<nf; i++) {
+      F = &(obj->flist[i]);
+      F->normal = PlaneNormal(&(F->vertices[0]->p3),
+			      &(F->vertices[1]->p3),
+			      &(F->vertices[2]->p3));
+    }
+    nv = obj->nvertices;
+    for(i=0; i<nv; i++) {
+      v.d[0] = v.d[1] = v.d[2] = 0.0;
+      V = &(obj->vlist[i]);
+      nF = V->Nfaces;
+      for(j=0; j<nF; j++) {
+	N = &(V->faces[j]->normal);
+	v.d[0] += N->d[0];
+	v.d[1] += N->d[1];
+	v.d[2] += N->d[2];
+      }
+      V->normal = Normalize3R(&v);
+    }
+  }
+}
+
+void CombineRot() {
+  mat4 = MatrixGLTimesMatrix4(&rot_mat, &mat4);
+  rot_mat = IMatGL;
+}
+
+void From4DTo3D() {
+  int i, ni, k;
+  double x, y, z, w, ww, m, r1;
+  Obj *obj;
+  Vertex *V;
+  Point4 *P4;
+  Point3 *P3;
+  double obj_scale, depth_scale, obj_center[4];
+  static double s;
+  static double d1 = 0.0; /* the distance between the south pole and
+                             the bottom projected plane */
+
+  r1 = sqrt(polard*polard + 2.0*polard) / (2.0+polard+d1);
+  /* 1/r1 is the radius of projected 3D scene */ 
+  
+  s = 255.99 / (2.0 * scale);
+
+  for(k=0; k<nobjs; k++) {
+    obj = olist[k];
+    ni = obj->nvertices;
+    /* scale and displace objects to fit unit sphere only if 
+       adjust_size_mode flag is on */
+    if(adjust_size_mode == False) {
+      obj_scale = 1.0;
+      obj_center[0] = obj_center[1] = obj_center[2] = obj_center[3] = 0.0;
+      depth_scale = obj->scale;
+    } else {
+      obj_scale = obj->scale;
+      obj_center[0] = obj->center.d[0];
+      obj_center[1] = obj->center.d[1];
+      obj_center[2] = obj->center.d[2];
+      obj_center[3] = obj->center.d[3];
+      depth_scale = 1.0;
+    }
+    
+    for(i=0; i<ni; i++) {
+      V = &(obj->vlist[i]);
+      P4 = &(V->p4);
+      P3 = &(V->p3);
+      x = (P4->d[0]-obj_center[0])*obj_scale*scale;
+      y = (P4->d[1]-obj_center[1])*obj_scale*scale;
+      z = (P4->d[2]-obj_center[2])*obj_scale*scale;
+      w = (P4->d[3]-obj_center[3])*obj_scale*scale;
+      
+      P3->d[0] = mat4.d[0]  * x + mat4.d[4]  * y
+	       + mat4.d[8]  * z + mat4.d[12] * w;
+      P3->d[1] = mat4.d[1]  * x + mat4.d[5]  * y
+	       + mat4.d[9]  * z + mat4.d[13] * w;
+      P3->d[2] = mat4.d[2]  * x + mat4.d[6]  * y
+	       + mat4.d[10] * z + mat4.d[14] * w;
+      ww =       mat4.d[3]  * x + mat4.d[7]  * y 
+	       + mat4.d[11] * z + mat4.d[15] * w;
+ 
+      V->depth = (int) ( (ww*depth_scale + scale) * s );
+
+      if(DEPTH_DEBUG){
+	if(V->depth < 0 || V->depth > 255) {
+	  fprintf(stderr, "V->depth = %d\n", V->depth); 
+	  fprintf(stderr, "obj->center[3]=%f\n",obj->center.d[3]);
+	}
+      }
+
+      if(proj4_type == POLAR) { 
+	/* polar projection, also scale it within a unit 3D ball */
+	m = (2.0+polard+d1) / (1.0+polard-ww) * r1; 
+	P3->d[0] *= m;
+	P3->d[1] *= m;
+	P3->d[2] *= m;
+      }
+    }
+  }
+}
+
+void myLoadProjection() 
+{
+  double top, bottom, left, right, n_over_d;
+
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  switch(proj3_mode) 
+    {
+    case PERSPECTIVE:
+      /* together with glTranslate keeps the center of the unit sphere in
+	 the focal plane */
+      n_over_d = near/fdist;
+      if(aspect > 1.0) {
+	top = n_over_d  * img_scale;
+	bottom = -top;
+	right = n_over_d * img_scale * aspect;
+	left  = -right;
+      } else {
+	top = n_over_d  * img_scale / aspect;
+	bottom = -top;
+	right = n_over_d * img_scale;
+	left  = -right;
+      }
+      glFrustum(left, right, bottom, top, near, far);
+      break;
+    case ORTHOGONAL:
+      if(aspect > 1.0) {
+	top = img_scale;
+	bottom = -top;
+	right = img_scale * aspect;
+	left  = -right;
+      } else {
+	top = img_scale / aspect;
+	bottom = -top;
+	right = img_scale;
+	left  = -right;
+      }
+      glOrtho(left, right, bottom, top, near, far);
+      break;
+    }
+  glTranslated(0.0, 0.0, -fdist); /* placed here to allow objects to be in the
+				     same place when switching projection 
+				     modes. */				     
+}

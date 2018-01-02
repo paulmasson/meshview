@@ -1,0 +1,18 @@
+        You should already be able to login to any of our Macs. They are
+configured to look to our ldap server for user authentication. So anyone
+with a CS account can login.
+        If you have a terminal window open, you can try this machine:
+>ssh -l hanson gallows.cs.indiana.edu
+        As for home directory, your regular (moose??? whale???) will be
+mounted by default. However, be aware that OS X will create some
+directories it needs in your home directory, such as Desktop, Documents,
+Library, and some others. I just wanted you to be aware of this, so you
+won't be wondering later, "Where the heck did those directoires come
+from?!!?" OS X needs these directories, and creates them by default the
+first time you login.
+        There are developement tools installed, including compilers. You
+can just use your regular home directory as noted above, or some
+subdirectory you create on it. There will be nothing left on the local Mac
+drive, unless you put it there on purpose. When you login, you should be
+in your regular home directory.
+  tj

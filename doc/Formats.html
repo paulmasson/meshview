@@ -1,0 +1,436 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>Meshview 1.2 File Formats</TITLE>
+   <META NAME="GENERATOR" CONTENT="Mozilla/3.01SGoldC-SGI (X11; I; IRIX64 6.4 IP30) [Netscape]">
+   <META NAME="Author" CONTENT="Konstantine I Ishkov (kishkov@cs.indiana.edu)">
+</HEAD>
+<BODY TEXT="#000000" BGCOLOR="#FFFFFF" LINK="#0000EE" VLINK="#551A8B" ALINK="#FF0000">
+
+<H1 ALIGN=CENTER><A NAME="Meshview 1.2"></A><B><A HREF="TOC.html#Meshview 1.2">Meshview
+1.2 File Formats</A>.</B></H1>
+
+<P><B>Note: This document partially uses <A HREF="http://www.geom.umn.edu/software/geomview/ooglman.html">OOGL</A>
+file format documentation distributed with <A HREF="http://www.geom.umn.edu/software/geomview/">Geomview</A>.
+</B></P>
+
+<P>The Meshview 1.2 supports <A HREF="#MESH">MESH</A>, <A HREF="#OFF">OFF</A>,
+<A HREF="#LIST">LIST</A>, <A HREF="#FRAMES">FRAMES</A>, <A HREF="#DOT">DOT</A>,
+and <A HREF="#LINE">LINE</A> formats. </P>
+
+<P><A HREF="#MESH">MESH</A>, <A HREF="#OFF">OFF</A> and <A HREF="#LIST">LIST</A>
+are very similar to the OOGL file formats. The OOGL formats are not fully
+implemented (no support for files with more than 4 dimensions), but several
+features are added. </P>
+
+<P><A HREF="#FRAMES">FRAMES</A>, <A HREF="#DOT">DOT </A>and <A HREF="#LINE">LINE</A>
+are specific to Meshview. <A HREF="#FRAMES">FRAMES</A> format is used for
+key frame animation, <A HREF="#DOT">DOT</A> and <A HREF="#LINE">LINE</A>
+are used to display dots and lines respectively. </P>
+
+<H1 ALIGN=CENTER><A NAME="Syntax"></A><A HREF="TOC.html#Syntax">Syntax</A>
+</H1>
+
+<H3><A NAME="Keywords"></A><A HREF="TOC.html#Keywords.">Keywords.</A></H3>
+
+<P>Keywords are case sensitive. Some have optional prefix and suffix letters
+indicating the presence of color or other data; in this case the order
+of prefixes and suffixes is significant, </P>
+
+<H3><A NAME="File Names"></A><A HREF="TOC.html#File Names.">File Names.</A></H3>
+
+<P>Meshview uses the file suffix to guess the file type. If the suffix
+is unrecognized, or if no suffix is available, all known types of objects
+are tried in turn until one accepts the data as valid.</P>
+
+<H3><A NAME="vertices"></A><A HREF="TOC.html#Vertices">Vertices.</A></H3>
+
+<P>All data for a vertex is grouped together. </P>
+
+<H4>The syntax is </H4>
+
+<PRE><TT>`x y z' 
+       (3-D floating-point vertex coordinates) or 
+`x y z w' 
+       (4-D floating-point vertex coordinates) 
+
+optionally followed by 
+
+`nx ny nz' 
+       (normalized 3-D surface-normal if present) 
+<B>       <A NAME="Note"></A>Note: specified normals are not used in Meshview. They are 
+       recalculated for each vertex.
+
+</B>optionally followed by 
+
+`r g b a' 
+    (4-component floating-point front side color if present, 
+    each component in range 0..1. The a (alpha) component 
+    represents opacity: 0 transparent, 1 opaque.) 
+
+optionally followed by 
+
+`r g b a' 
+    (4-component floating-point back side color if present
+
+optionally followed by 
+
+`s t' 
+    or 
+`s t u' 
+   (two or three texture-coordinate values). </TT></PRE>
+
+<P>Values are separated by white space. Line breaks are immaterial. </P>
+
+<H3><A NAME="Comments"></A><A HREF="TOC.html#Comments">Comments.</A></H3>
+
+<P>Comments begin with <B><FONT SIZE=+1># </FONT></B>and continue to the
+end of the line; they're allowed everywhere a newline is. </P>
+
+<H2 ALIGN=CENTER><A NAME="ObjectFileFormats"></A><A HREF="TOC.html#Object File Formats">Object
+File Formats </A></H2>
+
+<H3><A NAME="MESH"></A><A HREF="TOC.html#MESH">MESH: rectangularly-connected
+mesh</A></H3>
+
+<P>The conventional suffix for a MESH file is `.mesh'. `.3mesh', `.meshc',
+and `.4mesh' are also supported. </P>
+
+<H4>The file syntax is </H4>
+
+<PRE>[U][C][C][N][Z][3][4][u][v][n]MESH[C][C] # key word 
+[front.color] # color of the object (front side), present only if MESHC 
+[back.color]  # color of the object (back side), present only if MESHCC 
+[Ndim] # Space dimension, present only if nMESH. <B>(Unsupported in Meshview.)</B> 
+Nu Nv  # Mesh grid dimensions 
+
+vertex(u=0,v=0) vertex(1,0) ... vertex(Nu-1,0) 
+vertex(0,1)         ...         vertex(Nu-1,1) 
+... 
+vertex(0,Nv-1)      ...         vertex(Nu-1,Nv-1) </PRE>
+
+<H4>The key word is [U][C][C][N][Z][3][4][u][v][n]MESH [C][C] </H4>
+
+<H4>The optional prefix characters mean: </H4>
+
+<UL>
+<LI>`U' Each vertex includes a 3-component texture space parameter. The
+first two components are the usual S and T texture parameters for that
+vertex; the third should be specified as zero. </LI>
+
+<LI>`C' Each vertex (see <A HREF="#vertices">Vertices</A> above) includes
+a 4-component color (front side).</LI>
+
+<LI>`C' Each vertex (see <A HREF="#vertices">Vertices</A> above) includes
+a 4-component color (back side). </LI>
+
+<LI>`N' Each vertex includes a surface normal vector. (Not used, see <A HREF="#Note">note</A><A HREF="#norm">
+</A>above) </LI>
+
+<LI>`Z' Of the 3 vertex position values, only the Z component is present;
+X and Y are omitted, and assumed to equal the mesh (u,v) coordinate so
+X ranges from 0 .. (Nu-1), Y from 0 .. (Nv-1) \ where Nu and Nv are the
+mesh dimensions -- see below.</LI>
+
+<LI>`3' Vertices are 3D, each consists of 3 floating values. 3 and 4 cannot
+both be present. </LI>
+
+<LI>`4' Vertices are 4D, each consists of 4 floating values. Z and 4 ,
+and 3 and 4 cannot both be present. </LI>
+
+<LI>`u' The mesh is wrapped in the u-direction, so the (0,v)-th vertex
+is connected to the (Nu-1,v)'th for all v. </LI>
+
+<LI>`v' The mesh is wrapped in the v-direction, so the (u,0)-th vertex
+is connected to the (u,Nv-1)'th for all u. Thus a u-wrapped or v-wrapped
+mesh is topologically a cylinder, while a uv-wrapped mesh is a torus. </LI>
+
+<LI>`n' (<B>This format is unsupported in Meshview 1.2.)</B> Specifies
+a mesh whose vertices live in a higher dimensional space. The dimension
+follows the &quot;MESH&quot; keyword. Each vertex then has Ndim components.
+</LI>
+</UL>
+
+<H4>The optional postfix characters mean:</H4>
+
+<UL>
+<LI>`C' object includes a 4-component color (front side). </LI>
+
+<LI>`C' object includes a 4-component color (back side). </LI>
+</UL>
+
+<P>Note that the order of prefix characters is significant; a colored,
+u-wrapped mesh is a CuMESH not a uCMESH.</P>
+
+<P>Following the mesh header are RGBA colors of the object (if [C] postfix
+are specified) and integers Nu and Nv, the dimensions of the mesh. </P>
+
+<P>Then follow Nu*Nv vertices, each in the form given by the header. They
+appear in v-major order, i.e. if we name each vertex by (u,v) then the
+vertices appear in the order </P>
+
+<PRE>(0,0) (1,0) (2,0) (3,0) ... (Nu-1,0) 
+(0,1) (1,1) (2,1) (3,1) ... (Nu-1,1)
+... 
+(0,Nv-1) ... (Nu-1,Nv-1)</PRE>
+
+<H3><A NAME="OFF"></A><A HREF="TOC.html#OFF">OFF Files </A></H3>
+
+<P>The conventional suffix for OFF files is `.off'. 3`.off' and `.4off'
+are also supported. </P>
+
+<H4>Syntax:</H4>
+
+<PRE>[ST][C][C][D][D][N][3][4][n]OFF[C][C] # Header keyword 
+[front.color] # color of the object (front side), present only if OFFC 
+[back.color]  # color of the object (back side), present only if OFFxsCC 
+[Ndim]  # Space dimension, present only if nOFF <B>(unsupported in Meshview)
+</B>NVertices NFaces NEdges # NEdges not used or checked but has to be present 
+
+x[0] y[0] z[0]    # Vertices, possibly with normals, 
+                  # colors, and/or texture coordinates, in that order, 
+                  # if the prefixes N, C, C, ST 
+                  # are present. 
+                  # If 4OFF, each vertex has 4 components. 
+... 
+
+x[NVertices-1] y[NVertices-1] z[NVertices-1] 
+                  # Faces, possibly with colors 
+                  # if the prefixes D, D, are present. 
+                  # Nv = # vertices on this face 
+                  # v[0] ... v[Nv-1]: vertex indices 
+                  # in range 0..NVertices-1 
+
+Nv v[0] v[1] ... v[Nv-1] [color.front] [color.back]
+... </PRE>
+
+<H4>The optional prefix characters mean: </H4>
+
+<UL>
+<LI>`ST' Each vertex includes a 2-component texture space parameter.</LI>
+
+<LI>`C' Each vertex (see <A HREF="#vertices">Vertices </A>above) includes
+a 4-component color (front side). </LI>
+
+<LI>`C' Each vertex (see <A HREF="#vertices">Vertices</A> above) includes
+a 4-component color (back side). </LI>
+
+<LI>`D' Each face includes a 4-component color (front side).</LI>
+
+<LI>`D' Each face includes a 4-component color (back side). </LI>
+
+<LI>`N' Each vertex includes a surface normal vector. (Not used, see <A HREF="#Note">note</A>
+above) </LI>
+
+<LI>`3' Vertices are 3D, each consists of 3 floating values. 3 and 4 cannot
+both be present. </LI>
+
+<LI>`4' Vertices are 4D, each consists of 4 floating values. 3 and 4 cannot
+both be present. </LI>
+
+<LI>`n' <B>(This format is unsupported in Meshview 1.2.) </B>Specifies
+a mesh whose vertices live in a higher dimensional space. The dimension
+follows the &quot;OFF&quot; keyword. Each vertex then has Ndim components.
+</LI>
+</UL>
+
+<H4>The optional postfix characters mean: </H4>
+
+<UL>
+<LI>`C' object includes a 4-component color (front side). </LI>
+
+<LI>`C' object includes a 4-component color (back side). </LI>
+</UL>
+
+<P>Note that the order of prefix characters is significant. </P>
+
+<P>OFF files (name for &quot;object file format&quot;) represent collections
+of planar polygons with possibly shared vertices, a convenient way to describe
+polyhedra. The polygons may be concave but there's no provision for polygons
+containing holes. </P>
+
+<P>An OFF file must begin with the keyword OFF. </P>
+
+<P>Following the OFF header are RGBA colors of the object (if [C] postfixes
+are specified) and three ASCII integers : NVertices, NFaces, and NEdges.
+These are the number of vertices, faces, and edges, respectively. Meshview
+does not use nor check NEdges; it needn't be correct but must be present.
+</P>
+
+<P>The vertex coordinates follow: (dimension * Nvertices) floating-point
+values. They're implicitly numbered 0 through NVertices-1. Dimension is
+either 3 (default) or 4 (specified by the key character 4 directly before
+OFF in the keyword). </P>
+
+<P>Following these are the face descriptions. </P>
+
+<P>Each has the form: </P>
+
+<PRE>N Vert1 Vert2 ... VertN [color.front] [color.back] </PRE>
+
+<P>Here N is the number of vertices on this face, and Vert1 through VertN
+are indices into the list of vertices (in the range 0..NVertices-1). </P>
+
+<P>The optional colors are in RGBA representation and present only if [D]
+[D] prefixes are specified. </P>
+
+<H3><A NAME="DOT"></A><A HREF="TOC.html#DOT">DOT: used to display dots
+</A></H3>
+
+<P>The conventional suffix for a DOT file is `.dot'. </P>
+
+<H4>The file syntax is </H4>
+
+<PRE>[S][C][3][4]DOT[C]    # key word 
+[color]               # color of dots, present only if DOTC
+[size]                # size of dots (points), present only if SDOT 
+Ndots                 # number of dots
+
+x[0] y[0] z[0] [w[0]] # Dots, possibly with colors 
+                      # if the prefix C is present. 
+... 
+x[Ndots-1] y[Ndots-1] z[Ndots-1] [w[Ndots-1]] </PRE>
+
+<H4>The optional prefix characters mean: </H4>
+
+<UL>
+<LI>`S' Size specified for all dots. </LI>
+
+<LI>`C' Each dot includes a 4-component color (RGBA). </LI>
+
+<LI>`3' Dots are 3D, each consists of 3 floating values. 3 and 4 cannot
+both be present. </LI>
+
+<LI>`4' Dots are 4D, each consists of 4 floating values. 3 and 4 cannot
+both be present. </LI>
+</UL>
+
+<H4>The optional postfix characters mean: </H4>
+
+<UL>
+<LI>`C' 4-component color is specified for all dots.</LI>
+</UL>
+
+<P>Note that the order of prefix characters is significant. </P>
+
+<P>Following the DOT header are RGBA color for all dots (if [C] postfix
+is present), size for all dots (if [S] prefix is present) and integer Ndots,
+the number of dots in object. </P>
+
+<P>The dot coordinates follow: (dimension * Nvertices) floating-point values.
+They're implicitly numbered 0 through Ndots-1. Dimension is either 3 (default)
+or 4 (specified by the key character 4 directly before DOT in the keyword).
+</P>
+
+<H3><A NAME="LINE"></A><A HREF="TOC.html#LINE">LINE: used to display lines
+</A></H3>
+
+<P>The conventional suffix for a DOT file is `.line'. </P>
+
+<H4>The file syntax is </H4>
+
+<PRE>[S][C][3][4]LINE[C] # key word 
+[color]             # color of lines, present only if DOTC 
+[size]              # size of lines (points), present only if SDOT 
+Nvertices           # number of vertices 
+Nlines              # number of lines 
+
+x[0] y[0] z[0] [w[0]] 
+                    # Vertices, possibly with colors 
+                    # if the prefix C is present.
+... 
+
+x[Nvertices-1] y[Nvertices-1] z[Nvertices-1] [w[Nvertices-1]]  
+                    # Lines 
+                    # v[0] ... v[Nv-1]: vertex indices 
+                    # in range 0..NVertices-1 
+
+v[0] v[1]
+... </PRE>
+
+<H4>The optional prefix characters mean: </H4>
+
+<UL>
+<LI>`S' Size specified for all lines. </LI>
+
+<LI>`C' Each dot includes a 4-component color (RGBA). </LI>
+
+<LI>`3' Vertices are 3D, each consists of 3 floating values. 3 and 4 cannot
+both be present. </LI>
+
+<LI>`4' Vertices are 4D, each consists of 4 floating values. 3 and 4 cannot
+both be present. </LI>
+</UL>
+
+<H4>The optional postfix characters mean: </H4>
+
+<UL>
+<LI>`C' 4-component color is specified for all lines. </LI>
+</UL>
+
+<P>Note that the order of prefix characters is significant. </P>
+
+<P>Following the LINE header are RGBA color for all verticess (if [C] postfix
+is present), size for all lines (if [S] prefix is present) and 2 integers:
+Nvertices (the number of vertices in the object), and Nlines (the number
+of lines in the object). </P>
+
+<P>The vertix coordinates follow: (dimension * Nvertices) floating-point
+values. They're implicitly numbered 0 through NVertices-1. dimension is
+either 3 (default) or 4 (specified by the key character 4 directly before
+DOT in the keyword). </P>
+
+<P>Following these are the line descriptions. </P>
+
+<P>Each has the form: </P>
+
+<PRE>Vert1 Vert2 </PRE>
+
+<P>Vert1 through Vert2 are indices into the list of vertices (in the range
+0..NVertices-1). </P>
+
+<H3><A NAME="LIST"></A><A HREF="TOC.html#LIST">LIST Files </A></H3>
+
+<P>The conventional suffix for a LIST file is `.list'. </P>
+
+<P>List of objects supported by Meshview.</P>
+
+<H4>Syntax: </H4>
+
+<PRE>LIST     # keyword
+
+object 
+object
+... </PRE>
+
+<H3><A NAME="FRAMES"></A><A HREF="TOC.html#FRAMES">FRAMES Files </A></H3>
+
+<P>The conventional suffix for a FRAMES file is `.frm'.</P>
+
+<P>A list of key frames. </P>
+
+<H4>Syntax: </H4>
+
+<PRE>FRAMES  # keyword
+Nframes # number of frames 
+
+frame 
+frame 
+... </PRE>
+
+<P>Frame can be any kind of object supported by Meshview, except LISTs
+including other LISTs and FRAMES itself. All frames should correspond to
+the same object. (E.g. they should have the same format, same number of
+vertices etc.). </P>
+
+<P>FRAMES format is used to display key frame animation. Meshview interpolates
+between vertex and texture coordinates in adjacent frames. </P>
+
+<P>
+<HR SIZE=5 WIDTH="100%"></P>
+
+<P>Comments to: <A HREF="mailto:kishkov@cs.indiana.edu">kishkov@cs.indana.edu<BR>
+</A>Created: Jul 21 1998 .</P>
+
+</BODY>
+</HTML>

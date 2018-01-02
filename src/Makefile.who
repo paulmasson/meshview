@@ -1,0 +1,54 @@
+#
+# Files
+#
+#  Try GenToo compilation
+# First: remove depends stuff inserted by RedHat and retry
+#
+# /usr/include/GL/GLwDrawA.h GLwMDrawA.h
+# and libraries seem to be in /usr/X11R6/lib/
+
+TARGET = meshview
+
+# omit ? mouse3d.c sgidrvr.c
+SRCS =  mouse3d.c sgidrvr.c  \
+       action.c callback.c draw.c geom.c init.c load.c \
+       main.c reset.c save.c transform.c ui.c ui_init.c ui_picker.c \
+       ui_setting.c ui_frames.c stereo.c ui_quatrot.c
+
+#
+# Compilation options
+#
+
+CC 	= gcc
+# -o32 -mips2 - will run on all processors >= R4000 (INDY, INDIGO etc.)
+#  GenToo? -I/usr/include/linux/
+CFLAGS	=  -O2 -DNO_STEREO -DLINUX -I/usr/X11R6/include 
+LDFLAGS	= -L/usr/X11R6/lib/ 
+
+LIBS	= -lGLw  -lXm -lXt -lX11 -lXext -lGLU -lGL -lm
+
+RM = /usr/bin/rm -rf
+
+OBJS = ${SRCS:.c=.o}
+
+#
+# Rules
+#
+
+
+default: depend $(TARGET) 
+	cp meshview ../bin/meshview.linux
+
+$(TARGET): ${OBJS} 
+	    ${CC} ${CFLAGS} ${LDFLAGS} -o $@ ${OBJS} ${LIBS}
+
+clean: clobber
+	-$(RM) $(OBJS) $(TARGET)
+
+clobber:
+	-$(RM) *~  *.bak #*
+
+depend:
+	makedepend -f Makefile.linux $(SRCS)
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.

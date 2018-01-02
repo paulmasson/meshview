@@ -1,0 +1,564 @@
+#
+# Files
+#
+# New Red Hat linux does have the following:
+# /usr/include/GL/GLwDrawA.h GLwMDrawA.h
+# and libraries seem to be in /usr/X11R6/lib/
+
+TARGET = meshview
+
+# omit mouse3d.c sgidrvr.c
+SRCS =  action.c callback.c draw.c geom.c init.c load.c \
+       main.c reset.c save.c transform.c ui.c ui_init.c ui_picker.c \
+       ui_setting.c ui_frames.c stereo.c ui_quatrot.c
+
+#
+# Compilation options
+#
+
+CC 	= gcc
+# -o32 -mips2 - will run on all processors >= R4000 (INDY, INDIGO etc.)
+CFLAGS	=  -O2 -DNO_STEREO -DLINUX
+LDFLAGS	= -L/usr/X11R6/lib/ -I/usr/X11R6/include
+LIBS	= -lGLw  -lXm -lXt -lX11 -lXext -lGLU -lGL -lm
+
+RM = /usr/bin/rm -rf
+
+OBJS = ${SRCS:.c=.o}
+
+#
+# Rules
+#
+
+
+default: depend $(TARGET) 
+	cp meshview ../bin/meshview.linux
+
+$(TARGET): ${OBJS} 
+	    ${CC} ${CFLAGS} ${LDFLAGS} -o $@ ${OBJS} ${LIBS}
+
+clean: clobber
+	-$(RM) $(OBJS) $(TARGET)
+
+clobber:
+	-$(RM) *~  *.bak #*
+
+depend:
+	makedepend -f Makefile $(SRCS)
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+action.o: all.h /usr/include/stdio.h /usr/include/features.h
+action.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+action.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+action.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+action.o: /usr/include/_G_config.h /usr/include/wchar.h
+action.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+action.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+action.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+action.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+action.o: /usr/include/sys/errno.h /usr/include/errno.h
+action.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+action.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+action.o: /usr/include/bits/fcntl.h /usr/include/math.h
+action.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+action.o: /usr/include/bits/mathcalls.h /usr/include/X11/Intrinsic.h
+action.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+action.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+action.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+action.o: /usr/include/string.h /usr/include/X11/Core.h
+action.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+action.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+action.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+action.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+action.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+action.o: /usr/include/sys/time.h /usr/include/bits/time.h
+action.o: /usr/include/sys/select.h /usr/include/bits/select.h
+action.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+action.o: /usr/include/GL/gl.h /usr/include/GL/glu.h /usr/include/GL/glx.h
+action.o: /usr/include/X11/Xmd.h /usr/include/GL/glxtokens.h defines.h
+action.o: structs.h
+callback.o: all.h /usr/include/stdio.h /usr/include/features.h
+callback.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+callback.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+callback.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+callback.o: /usr/include/_G_config.h /usr/include/wchar.h
+callback.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+callback.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+callback.o: /usr/include/stdlib.h /usr/include/sys/types.h
+callback.o: /usr/include/time.h /usr/include/sys/stat.h
+callback.o: /usr/include/bits/stat.h /usr/include/sys/errno.h
+callback.o: /usr/include/errno.h /usr/include/bits/errno.h
+callback.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+callback.o: /usr/include/fcntl.h /usr/include/bits/fcntl.h
+callback.o: /usr/include/math.h /usr/include/bits/huge_val.h
+callback.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+callback.o: /usr/include/X11/Intrinsic.h /usr/include/X11/Xlib.h
+callback.o: /usr/include/X11/X.h /usr/include/X11/Xfuncproto.h
+callback.o: /usr/include/X11/Xosdefs.h /usr/include/X11/Xutil.h
+callback.o: /usr/include/X11/Xresource.h /usr/include/string.h
+callback.o: /usr/include/X11/Core.h /usr/include/X11/Composite.h
+callback.o: /usr/include/X11/Constraint.h /usr/include/X11/Object.h
+callback.o: /usr/include/X11/RectObj.h /usr/include/X11/keysym.h
+callback.o: /usr/include/X11/keysymdef.h /usr/include/X11/Xos.h
+callback.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
+callback.o: /usr/include/bits/confname.h /usr/include/sys/time.h
+callback.o: /usr/include/bits/time.h /usr/include/sys/select.h
+callback.o: /usr/include/bits/select.h /usr/include/bits/sigset.h
+callback.o: /usr/include/X11/Xarch.h /usr/include/GL/gl.h
+callback.o: /usr/include/GL/glu.h /usr/include/GL/glx.h
+callback.o: /usr/include/X11/Xmd.h /usr/include/GL/glxtokens.h defines.h
+callback.o: structs.h
+draw.o: all.h /usr/include/stdio.h /usr/include/features.h
+draw.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+draw.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+draw.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+draw.o: /usr/include/_G_config.h /usr/include/wchar.h
+draw.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+draw.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+draw.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+draw.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+draw.o: /usr/include/sys/errno.h /usr/include/errno.h
+draw.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+draw.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+draw.o: /usr/include/bits/fcntl.h /usr/include/math.h
+draw.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+draw.o: /usr/include/bits/mathcalls.h /usr/include/X11/Intrinsic.h
+draw.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+draw.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+draw.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+draw.o: /usr/include/string.h /usr/include/X11/Core.h
+draw.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+draw.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+draw.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+draw.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+draw.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+draw.o: /usr/include/sys/time.h /usr/include/bits/time.h
+draw.o: /usr/include/sys/select.h /usr/include/bits/select.h
+draw.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+draw.o: /usr/include/GL/gl.h /usr/include/GL/glu.h /usr/include/GL/glx.h
+draw.o: /usr/include/X11/Xmd.h /usr/include/GL/glxtokens.h defines.h
+draw.o: structs.h
+geom.o: all.h /usr/include/stdio.h /usr/include/features.h
+geom.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+geom.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+geom.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+geom.o: /usr/include/_G_config.h /usr/include/wchar.h
+geom.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+geom.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+geom.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+geom.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+geom.o: /usr/include/sys/errno.h /usr/include/errno.h
+geom.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+geom.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+geom.o: /usr/include/bits/fcntl.h /usr/include/math.h
+geom.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+geom.o: /usr/include/bits/mathcalls.h /usr/include/X11/Intrinsic.h
+geom.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+geom.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+geom.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+geom.o: /usr/include/string.h /usr/include/X11/Core.h
+geom.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+geom.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+geom.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+geom.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+geom.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+geom.o: /usr/include/sys/time.h /usr/include/bits/time.h
+geom.o: /usr/include/sys/select.h /usr/include/bits/select.h
+geom.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+geom.o: /usr/include/GL/gl.h /usr/include/GL/glu.h /usr/include/GL/glx.h
+geom.o: /usr/include/X11/Xmd.h /usr/include/GL/glxtokens.h defines.h
+geom.o: structs.h
+init.o: all.h /usr/include/stdio.h /usr/include/features.h
+init.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+init.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+init.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+init.o: /usr/include/_G_config.h /usr/include/wchar.h
+init.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+init.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+init.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+init.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+init.o: /usr/include/sys/errno.h /usr/include/errno.h
+init.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+init.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+init.o: /usr/include/bits/fcntl.h /usr/include/math.h
+init.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+init.o: /usr/include/bits/mathcalls.h /usr/include/X11/Intrinsic.h
+init.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+init.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+init.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+init.o: /usr/include/string.h /usr/include/X11/Core.h
+init.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+init.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+init.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+init.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+init.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+init.o: /usr/include/sys/time.h /usr/include/bits/time.h
+init.o: /usr/include/sys/select.h /usr/include/bits/select.h
+init.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+init.o: /usr/include/GL/gl.h /usr/include/GL/glu.h /usr/include/GL/glx.h
+init.o: /usr/include/X11/Xmd.h /usr/include/GL/glxtokens.h defines.h
+init.o: structs.h
+load.o: all.h /usr/include/stdio.h /usr/include/features.h
+load.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+load.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+load.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+load.o: /usr/include/_G_config.h /usr/include/wchar.h
+load.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+load.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+load.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+load.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+load.o: /usr/include/sys/errno.h /usr/include/errno.h
+load.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+load.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+load.o: /usr/include/bits/fcntl.h /usr/include/math.h
+load.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+load.o: /usr/include/bits/mathcalls.h /usr/include/X11/Intrinsic.h
+load.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+load.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+load.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+load.o: /usr/include/string.h /usr/include/X11/Core.h
+load.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+load.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+load.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+load.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+load.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+load.o: /usr/include/sys/time.h /usr/include/bits/time.h
+load.o: /usr/include/sys/select.h /usr/include/bits/select.h
+load.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+load.o: /usr/include/GL/gl.h /usr/include/GL/glu.h /usr/include/GL/glx.h
+load.o: /usr/include/X11/Xmd.h /usr/include/GL/glxtokens.h defines.h
+load.o: structs.h /usr/include/strings.h
+main.o: all.h /usr/include/stdio.h /usr/include/features.h
+main.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+main.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+main.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+main.o: /usr/include/_G_config.h /usr/include/wchar.h
+main.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+main.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+main.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+main.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+main.o: /usr/include/sys/errno.h /usr/include/errno.h
+main.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+main.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+main.o: /usr/include/bits/fcntl.h /usr/include/math.h
+main.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+main.o: /usr/include/bits/mathcalls.h /usr/include/X11/Intrinsic.h
+main.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+main.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+main.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+main.o: /usr/include/string.h /usr/include/X11/Core.h
+main.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+main.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+main.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+main.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+main.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+main.o: /usr/include/sys/time.h /usr/include/bits/time.h
+main.o: /usr/include/sys/select.h /usr/include/bits/select.h
+main.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+main.o: /usr/include/GL/gl.h /usr/include/GL/glu.h /usr/include/GL/glx.h
+main.o: /usr/include/X11/Xmd.h /usr/include/GL/glxtokens.h defines.h
+main.o: structs.h
+reset.o: all.h /usr/include/stdio.h /usr/include/features.h
+reset.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+reset.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+reset.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+reset.o: /usr/include/_G_config.h /usr/include/wchar.h
+reset.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+reset.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+reset.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+reset.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+reset.o: /usr/include/sys/errno.h /usr/include/errno.h
+reset.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+reset.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+reset.o: /usr/include/bits/fcntl.h /usr/include/math.h
+reset.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+reset.o: /usr/include/bits/mathcalls.h /usr/include/X11/Intrinsic.h
+reset.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+reset.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+reset.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+reset.o: /usr/include/string.h /usr/include/X11/Core.h
+reset.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+reset.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+reset.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+reset.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+reset.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+reset.o: /usr/include/sys/time.h /usr/include/bits/time.h
+reset.o: /usr/include/sys/select.h /usr/include/bits/select.h
+reset.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+reset.o: /usr/include/GL/gl.h /usr/include/GL/glu.h /usr/include/GL/glx.h
+reset.o: /usr/include/X11/Xmd.h /usr/include/GL/glxtokens.h defines.h
+reset.o: structs.h
+save.o: all.h /usr/include/stdio.h /usr/include/features.h
+save.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+save.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+save.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+save.o: /usr/include/_G_config.h /usr/include/wchar.h
+save.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+save.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+save.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+save.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+save.o: /usr/include/sys/errno.h /usr/include/errno.h
+save.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+save.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+save.o: /usr/include/bits/fcntl.h /usr/include/math.h
+save.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+save.o: /usr/include/bits/mathcalls.h /usr/include/X11/Intrinsic.h
+save.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+save.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+save.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+save.o: /usr/include/string.h /usr/include/X11/Core.h
+save.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+save.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+save.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+save.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+save.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+save.o: /usr/include/sys/time.h /usr/include/bits/time.h
+save.o: /usr/include/sys/select.h /usr/include/bits/select.h
+save.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+save.o: /usr/include/GL/gl.h /usr/include/GL/glu.h /usr/include/GL/glx.h
+save.o: /usr/include/X11/Xmd.h /usr/include/GL/glxtokens.h defines.h
+save.o: structs.h
+transform.o: all.h /usr/include/stdio.h /usr/include/features.h
+transform.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+transform.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+transform.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+transform.o: /usr/include/_G_config.h /usr/include/wchar.h
+transform.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+transform.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+transform.o: /usr/include/stdlib.h /usr/include/sys/types.h
+transform.o: /usr/include/time.h /usr/include/sys/stat.h
+transform.o: /usr/include/bits/stat.h /usr/include/sys/errno.h
+transform.o: /usr/include/errno.h /usr/include/bits/errno.h
+transform.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+transform.o: /usr/include/fcntl.h /usr/include/bits/fcntl.h
+transform.o: /usr/include/math.h /usr/include/bits/huge_val.h
+transform.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+transform.o: /usr/include/X11/Intrinsic.h /usr/include/X11/Xlib.h
+transform.o: /usr/include/X11/X.h /usr/include/X11/Xfuncproto.h
+transform.o: /usr/include/X11/Xosdefs.h /usr/include/X11/Xutil.h
+transform.o: /usr/include/X11/Xresource.h /usr/include/string.h
+transform.o: /usr/include/X11/Core.h /usr/include/X11/Composite.h
+transform.o: /usr/include/X11/Constraint.h /usr/include/X11/Object.h
+transform.o: /usr/include/X11/RectObj.h /usr/include/X11/keysym.h
+transform.o: /usr/include/X11/keysymdef.h /usr/include/X11/Xos.h
+transform.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
+transform.o: /usr/include/bits/confname.h /usr/include/sys/time.h
+transform.o: /usr/include/bits/time.h /usr/include/sys/select.h
+transform.o: /usr/include/bits/select.h /usr/include/bits/sigset.h
+transform.o: /usr/include/X11/Xarch.h /usr/include/GL/gl.h
+transform.o: /usr/include/GL/glu.h /usr/include/GL/glx.h
+transform.o: /usr/include/X11/Xmd.h /usr/include/GL/glxtokens.h defines.h
+transform.o: structs.h
+ui.o: all.h /usr/include/stdio.h /usr/include/features.h
+ui.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+ui.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+ui.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+ui.o: /usr/include/_G_config.h /usr/include/wchar.h /usr/include/bits/wchar.h
+ui.o: /usr/include/gconv.h /usr/include/bits/stdio_lim.h
+ui.o: /usr/include/bits/sys_errlist.h /usr/include/stdlib.h
+ui.o: /usr/include/sys/types.h /usr/include/time.h /usr/include/sys/stat.h
+ui.o: /usr/include/bits/stat.h /usr/include/sys/errno.h /usr/include/errno.h
+ui.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+ui.o: /usr/include/asm/errno.h /usr/include/fcntl.h /usr/include/bits/fcntl.h
+ui.o: /usr/include/math.h /usr/include/bits/huge_val.h
+ui.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+ui.o: /usr/include/X11/Intrinsic.h /usr/include/X11/Xlib.h
+ui.o: /usr/include/X11/X.h /usr/include/X11/Xfuncproto.h
+ui.o: /usr/include/X11/Xosdefs.h /usr/include/X11/Xutil.h
+ui.o: /usr/include/X11/Xresource.h /usr/include/string.h
+ui.o: /usr/include/X11/Core.h /usr/include/X11/Composite.h
+ui.o: /usr/include/X11/Constraint.h /usr/include/X11/Object.h
+ui.o: /usr/include/X11/RectObj.h /usr/include/X11/keysym.h
+ui.o: /usr/include/X11/keysymdef.h /usr/include/X11/Xos.h
+ui.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
+ui.o: /usr/include/bits/confname.h /usr/include/sys/time.h
+ui.o: /usr/include/bits/time.h /usr/include/sys/select.h
+ui.o: /usr/include/bits/select.h /usr/include/bits/sigset.h
+ui.o: /usr/include/X11/Xarch.h /usr/include/GL/gl.h /usr/include/GL/glu.h
+ui.o: /usr/include/GL/glx.h /usr/include/X11/Xmd.h
+ui.o: /usr/include/GL/glxtokens.h defines.h structs.h
+ui_init.o: all.h /usr/include/stdio.h /usr/include/features.h
+ui_init.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+ui_init.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+ui_init.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+ui_init.o: /usr/include/_G_config.h /usr/include/wchar.h
+ui_init.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+ui_init.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+ui_init.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+ui_init.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+ui_init.o: /usr/include/sys/errno.h /usr/include/errno.h
+ui_init.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+ui_init.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+ui_init.o: /usr/include/bits/fcntl.h /usr/include/math.h
+ui_init.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+ui_init.o: /usr/include/bits/mathcalls.h /usr/include/X11/Intrinsic.h
+ui_init.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+ui_init.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+ui_init.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+ui_init.o: /usr/include/string.h /usr/include/X11/Core.h
+ui_init.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+ui_init.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+ui_init.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+ui_init.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+ui_init.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+ui_init.o: /usr/include/sys/time.h /usr/include/bits/time.h
+ui_init.o: /usr/include/sys/select.h /usr/include/bits/select.h
+ui_init.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+ui_init.o: /usr/include/GL/gl.h /usr/include/GL/glu.h /usr/include/GL/glx.h
+ui_init.o: /usr/include/X11/Xmd.h /usr/include/GL/glxtokens.h defines.h
+ui_init.o: structs.h
+ui_picker.o: all.h /usr/include/stdio.h /usr/include/features.h
+ui_picker.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+ui_picker.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+ui_picker.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+ui_picker.o: /usr/include/_G_config.h /usr/include/wchar.h
+ui_picker.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+ui_picker.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+ui_picker.o: /usr/include/stdlib.h /usr/include/sys/types.h
+ui_picker.o: /usr/include/time.h /usr/include/sys/stat.h
+ui_picker.o: /usr/include/bits/stat.h /usr/include/sys/errno.h
+ui_picker.o: /usr/include/errno.h /usr/include/bits/errno.h
+ui_picker.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+ui_picker.o: /usr/include/fcntl.h /usr/include/bits/fcntl.h
+ui_picker.o: /usr/include/math.h /usr/include/bits/huge_val.h
+ui_picker.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+ui_picker.o: /usr/include/X11/Intrinsic.h /usr/include/X11/Xlib.h
+ui_picker.o: /usr/include/X11/X.h /usr/include/X11/Xfuncproto.h
+ui_picker.o: /usr/include/X11/Xosdefs.h /usr/include/X11/Xutil.h
+ui_picker.o: /usr/include/X11/Xresource.h /usr/include/string.h
+ui_picker.o: /usr/include/X11/Core.h /usr/include/X11/Composite.h
+ui_picker.o: /usr/include/X11/Constraint.h /usr/include/X11/Object.h
+ui_picker.o: /usr/include/X11/RectObj.h /usr/include/X11/keysym.h
+ui_picker.o: /usr/include/X11/keysymdef.h /usr/include/X11/Xos.h
+ui_picker.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
+ui_picker.o: /usr/include/bits/confname.h /usr/include/sys/time.h
+ui_picker.o: /usr/include/bits/time.h /usr/include/sys/select.h
+ui_picker.o: /usr/include/bits/select.h /usr/include/bits/sigset.h
+ui_picker.o: /usr/include/X11/Xarch.h /usr/include/GL/gl.h
+ui_picker.o: /usr/include/GL/glu.h /usr/include/GL/glx.h
+ui_picker.o: /usr/include/X11/Xmd.h /usr/include/GL/glxtokens.h defines.h
+ui_picker.o: structs.h
+ui_setting.o: all.h /usr/include/stdio.h /usr/include/features.h
+ui_setting.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+ui_setting.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+ui_setting.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+ui_setting.o: /usr/include/_G_config.h /usr/include/wchar.h
+ui_setting.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+ui_setting.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+ui_setting.o: /usr/include/stdlib.h /usr/include/sys/types.h
+ui_setting.o: /usr/include/time.h /usr/include/sys/stat.h
+ui_setting.o: /usr/include/bits/stat.h /usr/include/sys/errno.h
+ui_setting.o: /usr/include/errno.h /usr/include/bits/errno.h
+ui_setting.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+ui_setting.o: /usr/include/fcntl.h /usr/include/bits/fcntl.h
+ui_setting.o: /usr/include/math.h /usr/include/bits/huge_val.h
+ui_setting.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+ui_setting.o: /usr/include/X11/Intrinsic.h /usr/include/X11/Xlib.h
+ui_setting.o: /usr/include/X11/X.h /usr/include/X11/Xfuncproto.h
+ui_setting.o: /usr/include/X11/Xosdefs.h /usr/include/X11/Xutil.h
+ui_setting.o: /usr/include/X11/Xresource.h /usr/include/string.h
+ui_setting.o: /usr/include/X11/Core.h /usr/include/X11/Composite.h
+ui_setting.o: /usr/include/X11/Constraint.h /usr/include/X11/Object.h
+ui_setting.o: /usr/include/X11/RectObj.h /usr/include/X11/keysym.h
+ui_setting.o: /usr/include/X11/keysymdef.h /usr/include/X11/Xos.h
+ui_setting.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
+ui_setting.o: /usr/include/bits/confname.h /usr/include/sys/time.h
+ui_setting.o: /usr/include/bits/time.h /usr/include/sys/select.h
+ui_setting.o: /usr/include/bits/select.h /usr/include/bits/sigset.h
+ui_setting.o: /usr/include/X11/Xarch.h /usr/include/GL/gl.h
+ui_setting.o: /usr/include/GL/glu.h /usr/include/GL/glx.h
+ui_setting.o: /usr/include/X11/Xmd.h /usr/include/GL/glxtokens.h defines.h
+ui_setting.o: structs.h
+ui_frames.o: /usr/include/sys/time.h /usr/include/features.h
+ui_frames.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+ui_frames.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+ui_frames.o: /usr/include/bits/typesizes.h /usr/include/time.h
+ui_frames.o: /usr/include/bits/time.h /usr/include/sys/select.h
+ui_frames.o: /usr/include/bits/select.h /usr/include/bits/sigset.h all.h
+ui_frames.o: /usr/include/stdio.h /usr/include/libio.h
+ui_frames.o: /usr/include/_G_config.h /usr/include/wchar.h
+ui_frames.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+ui_frames.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+ui_frames.o: /usr/include/stdlib.h /usr/include/sys/types.h
+ui_frames.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+ui_frames.o: /usr/include/sys/errno.h /usr/include/errno.h
+ui_frames.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+ui_frames.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+ui_frames.o: /usr/include/bits/fcntl.h /usr/include/math.h
+ui_frames.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+ui_frames.o: /usr/include/bits/mathcalls.h /usr/include/X11/Intrinsic.h
+ui_frames.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+ui_frames.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+ui_frames.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+ui_frames.o: /usr/include/string.h /usr/include/X11/Core.h
+ui_frames.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+ui_frames.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+ui_frames.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+ui_frames.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+ui_frames.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+ui_frames.o: /usr/include/X11/Xarch.h /usr/include/GL/gl.h
+ui_frames.o: /usr/include/GL/glu.h /usr/include/GL/glx.h
+ui_frames.o: /usr/include/X11/Xmd.h /usr/include/GL/glxtokens.h defines.h
+ui_frames.o: structs.h bitmaps.h
+stereo.o: all.h /usr/include/stdio.h /usr/include/features.h
+stereo.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+stereo.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+stereo.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+stereo.o: /usr/include/_G_config.h /usr/include/wchar.h
+stereo.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+stereo.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+stereo.o: /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h
+stereo.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+stereo.o: /usr/include/sys/errno.h /usr/include/errno.h
+stereo.o: /usr/include/bits/errno.h /usr/include/linux/errno.h
+stereo.o: /usr/include/asm/errno.h /usr/include/fcntl.h
+stereo.o: /usr/include/bits/fcntl.h /usr/include/math.h
+stereo.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+stereo.o: /usr/include/bits/mathcalls.h /usr/include/X11/Intrinsic.h
+stereo.o: /usr/include/X11/Xlib.h /usr/include/X11/X.h
+stereo.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+stereo.o: /usr/include/X11/Xutil.h /usr/include/X11/Xresource.h
+stereo.o: /usr/include/string.h /usr/include/X11/Core.h
+stereo.o: /usr/include/X11/Composite.h /usr/include/X11/Constraint.h
+stereo.o: /usr/include/X11/Object.h /usr/include/X11/RectObj.h
+stereo.o: /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h
+stereo.o: /usr/include/X11/Xos.h /usr/include/unistd.h
+stereo.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+stereo.o: /usr/include/sys/time.h /usr/include/bits/time.h
+stereo.o: /usr/include/sys/select.h /usr/include/bits/select.h
+stereo.o: /usr/include/bits/sigset.h /usr/include/X11/Xarch.h
+stereo.o: /usr/include/GL/gl.h /usr/include/GL/glu.h /usr/include/GL/glx.h
+stereo.o: /usr/include/X11/Xmd.h /usr/include/GL/glxtokens.h defines.h
+stereo.o: structs.h
+ui_quatrot.o: all.h /usr/include/stdio.h /usr/include/features.h
+ui_quatrot.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+ui_quatrot.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+ui_quatrot.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+ui_quatrot.o: /usr/include/_G_config.h /usr/include/wchar.h
+ui_quatrot.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+ui_quatrot.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+ui_quatrot.o: /usr/include/stdlib.h /usr/include/sys/types.h
+ui_quatrot.o: /usr/include/time.h /usr/include/sys/stat.h
+ui_quatrot.o: /usr/include/bits/stat.h /usr/include/sys/errno.h
+ui_quatrot.o: /usr/include/errno.h /usr/include/bits/errno.h
+ui_quatrot.o: /usr/include/linux/errno.h /usr/include/asm/errno.h
+ui_quatrot.o: /usr/include/fcntl.h /usr/include/bits/fcntl.h
+ui_quatrot.o: /usr/include/math.h /usr/include/bits/huge_val.h
+ui_quatrot.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+ui_quatrot.o: /usr/include/X11/Intrinsic.h /usr/include/X11/Xlib.h
+ui_quatrot.o: /usr/include/X11/X.h /usr/include/X11/Xfuncproto.h
+ui_quatrot.o: /usr/include/X11/Xosdefs.h /usr/include/X11/Xutil.h
+ui_quatrot.o: /usr/include/X11/Xresource.h /usr/include/string.h
+ui_quatrot.o: /usr/include/X11/Core.h /usr/include/X11/Composite.h
+ui_quatrot.o: /usr/include/X11/Constraint.h /usr/include/X11/Object.h
+ui_quatrot.o: /usr/include/X11/RectObj.h /usr/include/X11/keysym.h
+ui_quatrot.o: /usr/include/X11/keysymdef.h /usr/include/X11/Xos.h
+ui_quatrot.o: /usr/include/unistd.h /usr/include/bits/posix_opt.h
+ui_quatrot.o: /usr/include/bits/confname.h /usr/include/sys/time.h
+ui_quatrot.o: /usr/include/bits/time.h /usr/include/sys/select.h
+ui_quatrot.o: /usr/include/bits/select.h /usr/include/bits/sigset.h
+ui_quatrot.o: /usr/include/X11/Xarch.h /usr/include/GL/gl.h
+ui_quatrot.o: /usr/include/GL/glu.h /usr/include/GL/glx.h
+ui_quatrot.o: /usr/include/X11/Xmd.h /usr/include/GL/glxtokens.h defines.h
+ui_quatrot.o: structs.h

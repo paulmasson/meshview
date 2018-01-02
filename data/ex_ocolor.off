@@ -1,0 +1,30 @@
+OFFCC
+
+# object with front and back object color (CC)
+
+#front and back object color (RGBA) 
+1.0 0.0 0.0 1.0 # red
+0.0 0.0 1.0 1.0 # blue
+# num vert num faces num edges (unused)
+12 3 0
+#vertices
+-1.0 -1.0 0.0
+-1.0  1.0 0.0
+ 1.0  1.0 0.0
+ 1.0 -1.0 0.0
+
+-1.0 0.0 -1.0
+-1.0 0.0  1.0
+ 1.0 0.0  1.0
+ 1.0 0.0 -1.0
+
+ 0.0-1.0 -1.0
+ 0.0-1.0  1.0
+ 0.0 1.0  1.0
+ 0.0 1.0 -1.0
+
+# faces
+4 0 1 2 3
+4 4 5 6 7
+4 8 9 10 11
+

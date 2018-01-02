@@ -1,0 +1,13 @@
+UZMESHCC
+#object with only z coordinate specified, texture and object colors
+
+#object colors front and back (RGBA)
+0.0 0.0 1.0 1.0 
+1.0 1.0 0.0 1.0
+# mesh dimensions
+2 2
+#vertices (only z coordinate) with texture (UV?)
+0 0.0 1.0 0.0
+0 1.0 1.0 0.0 
+0 0.0 0.0 0.0 
+0 1.0 0.0 0.0 
